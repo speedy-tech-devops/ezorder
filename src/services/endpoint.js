@@ -1,0 +1,1 @@
+export const baseUrl = "https://d-api.speedy-tech.co"

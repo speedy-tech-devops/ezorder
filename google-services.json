@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "197533544935",
+    "project_id": "ezorder-5e592",
+    "storage_bucket": "ezorder-5e592.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197533544935:android:59fb1300c9a9ff2cf5cd42",
+        "android_client_info": {
+          "package_name": "com.ezorder.notification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197533544935-57arl8g5n3sq6ra02sbf9mf3bmmaknrv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuHCji0otlgR4-YynO3EJgrlN_NbLgNrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197533544935-57arl8g5n3sq6ra02sbf9mf3bmmaknrv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

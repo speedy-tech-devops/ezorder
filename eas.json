@@ -1,0 +1,48 @@
+{
+  "cli": {
+    "version": ">= 3.6.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "ios": {},
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "jeerawut.te@gmail.com",
+        "ascAppId": "1231231"
+      }
+    }
+  }
+}
