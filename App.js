@@ -22,7 +22,6 @@ import Camera from './src/screens/Camera';
 import HistoryBill from './src/screens/HistoryBill';
 import {AuthProvider} from './src/context/AuthProvider';
 import firebase from '@react-native-firebase/app';
-import messaging from '@react-native-firebase/messaging';
 const firebaseConfig = {
   apiKey: "AIzaSyBFa_3D8d_Dr0M5h5d9ZiOZGAbBbXBrQZM",
   authDomain: "ezorder-5e592.firebaseapp.com",
@@ -42,24 +41,7 @@ function App({route}) {
     'Kanit-Regular': require('./assets/fonts/Kanit-Regular.ttf'),
     'Kanit-Bold': require('./assets/fonts/Kanit-SemiBold.ttf'),
   });
-  async function requestUserPermission() {
-    const authStatus = await firebase.messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
-  }
   useEffect(()=>{
-    if (requestUserPermission()) {
-      firebase.messaging().getToken().then(token => {
-        console.log(token);
-      })
-    } else {
-      console.log(authStatus);
-    }
   },[])
   if (!loaded) {
     return null;
