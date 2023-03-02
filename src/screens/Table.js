@@ -6,12 +6,29 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { fetchDataAll } from '../actions/app';
 import {Ionicons} from '@expo/vector-icons';
 import Text from '../components/Text';
+import { tableList } from '../actions/tableAction';
+import { useDispatch, useSelector } from 'react-redux'
 const Stack = createNativeStackNavigator();
 function Table({ navigation }) {
+  const {table,auth} = useSelector((state) => state);
+  const dispatch = useDispatch()
   const [data , setData] = useState([])
   const [password, setPassword] = useState("");
+  // console.log(table)
   useEffect(() => {
-  },[])
+    if(table?.tableState?.data){
+      setData(table?.tableState?.data)
+    }
+    
+  },[table,table.loading])
+  useEffect(() => {
+    // console.log(auth.userInfo)
+    const tableLoadData = async () => {
+      await dispatch(tableList())
+      
+    }
+    tableLoadData()
+  },[auth.userInfo])
   return (
     <SafeAreaView forceInset={{ top: 'never'}} style={{ flex: 1,backgroundColor : "#fff" }}>
       <ScrollView>
@@ -20,25 +37,25 @@ function Table({ navigation }) {
           data.map((item,i) => {
             return (
               <TouchableOpacity onPress={ () => { navigation.navigate('TableDetail', {
-                itemId: i+1,
-                otherParam: data.name,
+                itemId: item.name['th'],
+                otherParam: item.booking,
               })}}>
-                <View style={{padding : 8,height : 120 ,width : 120,alignContent:"center",alignItems: "center" , justifyContent : "center",margin : 2,marginBottom : 15}}>
-                  <Image source={  i != 1 ? require('../../assets/table-yellow.png') : require('../../assets/table-red.png')} style={{position : "absolute"}}></Image>
-                  <Text style={{color: "#000",fontSize: 24, fontFamily : "Kanit-Bold",lineHeight: 25,marginTop : 5}}>{i+1}</Text>
-                  <Text style={{color: "#000",fontSize: 16,lineHeight: 20}}>โต๊ะ</Text>
+                <View style={{padding : 8,height : 110 ,width : 110,alignContent:"center",alignItems: "center" , justifyContent : "center",margin : 2,marginBottom : 15}}>
+                  <Image source={ item.status == "" && require('../../assets/table-null.png') || item.status == "WAIT" && require('../../assets/table-yellow.png') || item.status == "PROCESSING" && require('../../assets/table-red.png')} style={{position : "absolute"}}></Image>
+                  <Text style={{color: "#000",fontSize: 22, fontFamily : "Kanit-Bold",lineHeight: 25,marginTop : 5}}>{item.name['th']}</Text>
+                  {/* <Text style={{color: "#000",fontSize: 16,lineHeight: 20}}>{โต๊ะ}</Text> */}
                 </View>
               </TouchableOpacity>
             )
           })
         }
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <View style={{padding : 8,height : 125 ,width : 125,alignContent:"center",alignItems: "center" , justifyContent : "center",margin : 2,marginBottom : 15}}>
             <Image source={  require('../../assets/table-null.png') } style={{position : "absolute"}}></Image>
             <Text style={{color: "#000",fontSize: 24, fontFamily : "Kanit-Bold",lineHeight: 25,marginTop : 5}}>{11}</Text>
             <Text style={{color: "#000",fontSize: 16,lineHeight: 20}}>โต๊ะ</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         
         </View>
       </ScrollView>

@@ -48,7 +48,7 @@ function TableDetail({ route, navigation}) {
   ]);
   useEffect(() => {
     navigation.setOptions({
-        title: 'โต๊ะ ' + itemId,
+        title: itemId,
     });
     fetchDataAll()
   },[])

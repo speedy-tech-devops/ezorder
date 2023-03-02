@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { orderList } from '../actions/orderAction'
+import { orderAccept, orderList } from '../actions/orderAction'
 
 
 const initialState = {
@@ -35,6 +35,21 @@ const orderSlice = createSlice({
         state.orderState = payload
       })
       .addCase(orderList.rejected, (state, { payload }) => {
+        state.loading = false
+        state.error = payload
+      })
+      .addCase(orderAccept.pending, (state) => {
+        state.loading = true
+        state.isLoggedIn = false
+        state.error = null
+        // state.branch = null
+      })
+      .addCase(orderAccept.fulfilled, (state, { payload }) => {
+        state.loading = false
+        state.isLoggedIn = true
+        state.orderState = payload
+      })
+      .addCase(orderAccept.rejected, (state, { payload }) => {
         state.loading = false
         state.error = payload
       })

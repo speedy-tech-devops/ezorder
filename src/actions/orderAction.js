@@ -11,7 +11,7 @@ export const orderList = createAsyncThunk('transaction/order',
                 headers: {
                     'Content-Type': 'application/json',
                     'authorization': `Bearer ${state.auth.accessToken}`,
-                    'speedy-branch' : '63bea7600beccd2e46b38444'
+                    'speedy-branch' : state.auth.branch
                 },
             }
             const { data } = await axios.get(`${baseUrl}/v1/transaction/order`, config)
@@ -29,19 +29,22 @@ export const orderList = createAsyncThunk('transaction/order',
     }
 )
 
-export const orderSendOrder = createAsyncThunk('auth/refresh',
+export const orderAccept = createAsyncThunk('transaction/accept',
     async (arg, { getState, rejectWithValue }) => {
         try {
             const state = getState();
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${state.auth.refreshToken}`
+            var config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: `${baseUrl}/v1/transaction/order/accept`,
+                headers: { 
+                  'speedy-branch': state.auth.branch, 
+                  'Authorization': `Bearer ${state.auth.accessToken}`,
+                  'Content-Type': 'application/json'
                 },
-            }
-            const { data } = await axios.post(`${baseUrl}/v1/auth/refresh`, {}, config)
-            AsyncStorage.setItem('accessToken', data.token)
-            AsyncStorage.setItem('refreshToken', data.refresh_token)
+                data : JSON.stringify(arg)
+              };
+            const { data } = await axios(config)
             return data
         } catch (error) {
             // return custom error message from API if any

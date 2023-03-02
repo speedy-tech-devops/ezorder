@@ -61,6 +61,7 @@ export const userTokenMe = createAsyncThunk('auth/token',
                 },
             }
             const { data } = await axios.get(`${baseUrl}/v1/auth/merchant/me`, config)
+            data.token = arg
             return data
         } catch (error) {
             // return custom error message from API if any

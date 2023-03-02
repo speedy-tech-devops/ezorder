@@ -52,6 +52,7 @@ const authSlice = createSlice({
       .addCase(userProfile.fulfilled, (state, { payload }) => {
         state.loading = false
         state.branch = payload.branch[0]?._id
+        state.accessToken = payload.accessTokens
         state.userInfo = payload
       })
       .addCase(userProfile.rejected, (state, { payload }) => {
@@ -66,6 +67,7 @@ const authSlice = createSlice({
       .addCase(userTokenMe.fulfilled, (state, { payload }) => {
         state.loading = false
         state.branch = payload.branch[0]?._id
+        state.accessToken = payload.token
         state.userInfo = payload
       })
       .addCase(userTokenMe.rejected, (state, { payload }) => {

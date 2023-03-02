@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Text from '../components/Text';
-import { orderList } from '../actions/orderAction';
+import { orderList ,orderAccept} from '../actions/orderAction';
 import { useDispatch, useSelector } from 'react-redux'
 const Stack = createNativeStackNavigator();
 function Order({ navigation }) {
@@ -16,7 +16,7 @@ function Order({ navigation }) {
   const [orderLists , setOrderLists] = useState([])
   const [password, setPassword] = useState("");
   
-  const ApporoveOrder = () =>
+  const ApporoveOrder = (order) =>
     Alert.alert('ยืนยันออเดอร์', 'คุณต้องการส่งออเดอร์นี้ใช่หรือไม่', [
       {
         text: 'ยกเลิก',
@@ -24,7 +24,18 @@ function Order({ navigation }) {
         style: 'cancel',
       },
       {
-        text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
+        text: 'ยืนยัน', onPress: async () => {
+
+          let data = {
+              "order": {
+                  "id": order._id,
+                  "details": order.details.map((v) => {return v._id})
+              }
+          }
+          console.log(data)
+          let acceptOrder = await dispatch(orderAccept(data))
+          console.log('acct',acceptOrder)
+        }
       },
   ]);
   const ApporoveServeOrders
@@ -50,13 +61,12 @@ function Order({ navigation }) {
         text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
       },
   ]);
-  console.log('order',auth)
   useEffect(() => {
     if(order?.orderState?.data){
       setOrderLists(order?.orderState?.data)
     }
     
-  },[order])
+  },[order,order.loading])
   useEffect(() => {
     // console.log(auth.userInfo)
     const OrderLoadData = async () => {
@@ -127,7 +137,7 @@ function Order({ navigation }) {
                     <Text  style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold" ,color : "red"}}>฿{item.total_amount}.00</Text>
                   </View>
                   <View style={{padding : 15,paddingLeft : 20}}>
-                    <TouchableOpacity style={{width : 120 , height : 40 , borderColor : "#16284B" ,borderWidth : 1,alignItems : "center",justifyContent:"center" , borderRadius : 10}}   onPress={() => ApporoveOrder()}>
+                    <TouchableOpacity style={{width : 120 , height : 40 , borderColor : "#16284B" ,borderWidth : 1,alignItems : "center",justifyContent:"center" , borderRadius : 10}}   onPress={() => ApporoveOrder(item)}>
                       <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#16284B"}}>ส่งออเดอร์</Text>
                     </TouchableOpacity>
                   </View>

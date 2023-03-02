@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
         const authDataSerialized = await AsyncStorage.getItem('accessToken');
         try {
         const authDataSerialized = await AsyncStorage.getItem('accessToken');
+        const resetAuthDataSerialized = await AsyncStorage.getItem('refreshToken');
         if (authDataSerialized) {
            await dispatch(userTokenMe(authDataSerialized))
         }else{
