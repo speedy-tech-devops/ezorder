@@ -50,7 +50,7 @@ function Order({ navigation }) {
         text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
       },
   ]);
-  console.log(auth)
+  console.log('order',auth)
   useEffect(() => {
     if(order?.orderState?.data){
       setOrderLists(order?.orderState?.data)
@@ -58,6 +58,7 @@ function Order({ navigation }) {
     
   },[order])
   useEffect(() => {
+    // console.log(auth.userInfo)
     const OrderLoadData = async () => {
       await dispatch(orderList())
       
