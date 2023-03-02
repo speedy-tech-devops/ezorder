@@ -43,7 +43,7 @@ function App({route}) {
     'Kanit-Bold': require('./assets/fonts/Kanit-SemiBold.ttf'),
   });
   async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
+    const authStatus = await firebase.messaging().requestPermission();
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -54,7 +54,7 @@ function App({route}) {
   }
   useEffect(()=>{
     if (requestUserPermission()) {
-      messaging().getToken().then(token => {
+      firebase.messaging().getToken().then(token => {
         console.log(token);
       })
     } else {

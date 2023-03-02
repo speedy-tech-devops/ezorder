@@ -22,9 +22,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#ffffff",
-        "googleServicesFile": "./google-services.json"
+        "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.ezorder.notification"
     },
     "web": {
@@ -41,6 +41,7 @@
         "expo-build-properties",
         {
           "ios": {
+            "deploymentTarget": "13.0",
             "useFrameworks": "static"
           }
         }
