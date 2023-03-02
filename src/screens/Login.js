@@ -12,12 +12,11 @@ function Login({ navigation ,fetchDataAll}) {
   const {accessToken,error} = auth;
 
   const [email, setEmail] = useState("admin@speedy-tech.co");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("123456");
   useEffect(() => {
     // fetchDataAll()
     if(auth?.userInfo?.first_name){
       navigation.navigate('Menu')
-      
     }
   },[auth])
   const Login_app_summit = async () => {

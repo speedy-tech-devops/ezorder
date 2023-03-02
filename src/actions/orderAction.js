@@ -3,20 +3,22 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { baseUrl } from '../services/endpoint'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const orderList = createAsyncThunk('auth/me',
+export const orderList = createAsyncThunk('transaction/order',
     async (arg, { getState, rejectWithValue, dispatch }) => {
         try {
             const state = getState();
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': `Bearer ${state.auth.accessToken}`
+                    'authorization': `Bearer ${state.auth.accessToken}`,
+                    'speedy-branch' : '63bea7600beccd2e46b38444'
                 },
             }
-            const { data } = await axios.get(`${baseUrl}/v1/management/order`, config)
+            const { data } = await axios.get(`${baseUrl}/v1/transaction/order`, config)
             return data
         } catch (error) {
             // return custom error message from API if any
+            console.log(error)
             if (error.response && error.response.data.message) {
                 if (error.response.status === 401) dispatch(userRefresh())
                 return rejectWithValue(error.response.data.message)

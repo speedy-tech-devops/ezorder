@@ -10,8 +10,8 @@ export const userLogin = createAsyncThunk('auth/login',
                     'Content-Type': 'application/json',
                 },
             }
-            const { data } = await axios.post(`${baseUrl}/v1/auth/login`, { email, password }, config)
-
+            const { data } = await axios.post(`${baseUrl}/v1/auth/merchant/login`, { email, password }, config)
+            
             AsyncStorage.setItem('accessToken', data.token)
             AsyncStorage.setItem('refreshToken', data.refresh_token)
             return data
@@ -20,6 +20,7 @@ export const userLogin = createAsyncThunk('auth/login',
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message)
             }
+            
             return rejectWithValue(error.message)
 
         }
@@ -36,7 +37,7 @@ export const userProfile = createAsyncThunk('auth/me',
                     'authorization': `Bearer ${state.auth.accessToken}`
                 },
             }
-            const { data } = await axios.get(`${baseUrl}/v1/auth/me`, config)
+            const { data } = await axios.get(`${baseUrl}/v1/auth/merchant/me`, config)
             return data
         } catch (error) {
             // return custom error message from API if any
@@ -49,7 +50,29 @@ export const userProfile = createAsyncThunk('auth/me',
         }
     }
 )
+export const userTokenMe = createAsyncThunk('auth/token',
+    async (arg, { getState, rejectWithValue, dispatch }) => {
+        try {
+            const state = getState();
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${arg}`
+                },
+            }
+            const { data } = await axios.get(`${baseUrl}/v1/auth/merchant/me`, config)
+            return data
+        } catch (error) {
+            // return custom error message from API if any
+            if (error.response && error.response.data.message) {
+                if (error.response.status === 401) dispatch(userRefresh())
+                return rejectWithValue(error.response.data.message)
+            }
+            return rejectWithValue(error.message)
 
+        }
+    }
+)
 export const userRefresh = createAsyncThunk('auth/refresh',
     async (arg, { getState, rejectWithValue }) => {
         try {
@@ -60,7 +83,7 @@ export const userRefresh = createAsyncThunk('auth/refresh',
                     'authorization': `Bearer ${state.auth.refreshToken}`
                 },
             }
-            const { data } = await axios.post(`${baseUrl}/v1/auth/refresh`, {}, config)
+            const { data } = await axios.post(`${baseUrl}/v1/auth/merchant/refresh`, {}, config)
             AsyncStorage.setItem('accessToken', data.token)
             AsyncStorage.setItem('refreshToken', data.refresh_token)
             return data

@@ -8,7 +8,7 @@ import { orderList } from '../actions/orderAction';
 import { useDispatch, useSelector } from 'react-redux'
 const Stack = createNativeStackNavigator();
 function Order({ navigation }) {
-  const {order} = useSelector((state) => state);
+  const {order,auth} = useSelector((state) => state);
   const dispatch = useDispatch()
 
   const [email, setEmail] = useState("");
@@ -50,10 +50,10 @@ function Order({ navigation }) {
         text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
       },
   ]);
+  console.log(auth)
   useEffect(() => {
-    if(order?.orderState?.newOrders){
-      setOrderLists(order?.orderState?.newOrders)
-      console.log(order?.orderState?.newOrders)
+    if(order?.orderState?.data){
+      setOrderLists(order?.orderState?.data)
     }
     
   },[order])
@@ -63,7 +63,7 @@ function Order({ navigation }) {
       
     }
     OrderLoadData()
-  },[])
+  },[auth.userInfo])
   
   return (
 

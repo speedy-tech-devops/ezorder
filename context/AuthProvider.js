@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useState } from "react"
-import { userTokenMe } from '../actions/authAction';
+import { userTokenMe } from '../src/actions/authAction';
 import { useDispatch, useSelector } from 'react-redux'
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
@@ -10,13 +10,15 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const loadUserFromCookies = async () => {
+        const authDataSerialized = await AsyncStorage.getItem('accessToken');
         try {
         const authDataSerialized = await AsyncStorage.getItem('accessToken');
         if (authDataSerialized) {
-            await dispatch(userTokenMe(authDataSerialized))
-          }
+           await dispatch(userTokenMe(authDataSerialized))
+        }else{
+            
+        }
         }catch(error){
-
         }
     }
     useEffect( () => {

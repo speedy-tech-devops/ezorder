@@ -20,20 +20,21 @@ import Tabledetail from './src/screens/Tabledetail';
 import Qrcode from './src/screens/Qrcode';
 import Camera from './src/screens/Camera';
 import HistoryBill from './src/screens/HistoryBill';
-import {AuthProvider} from './src/context/AuthProvider';
-import firebase from '@react-native-firebase/app';
-const firebaseConfig = {
-  apiKey: "AIzaSyBFa_3D8d_Dr0M5h5d9ZiOZGAbBbXBrQZM",
-  authDomain: "ezorder-5e592.firebaseapp.com",
-  projectId: "ezorder-5e592",
-  databaseURL : "ezorder-5e592",
-  storageBucket: "ezorder-5e592.appspot.com",
-  messagingSenderId: "197533544935",
-  appId: "1:197533544935:web:539773013080b68cf5cd42",
-  measurementId: "G-7XDYV5YEB9"
-};
+import {AuthProvider} from './context/AuthProvider';
+// import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBFa_3D8d_Dr0M5h5d9ZiOZGAbBbXBrQZM",
+//   authDomain: "ezorder-5e592.firebaseapp.com",
+//   projectId: "ezorder-5e592",
+//   databaseURL : "ezorder-5e592",
+//   storageBucket: "ezorder-5e592.appspot.com",
+//   messagingSenderId: "197533544935",
+//   appId: "1:197533544935:web:539773013080b68cf5cd42",
+//   measurementId: "G-7XDYV5YEB9"
+// };
 
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 const Stack = createStackNavigator();
 function App({route}) {
   const [loaded] = useFonts({
@@ -41,7 +42,24 @@ function App({route}) {
     'Kanit-Regular': require('./assets/fonts/Kanit-Regular.ttf'),
     'Kanit-Bold': require('./assets/fonts/Kanit-SemiBold.ttf'),
   });
+  // async function requestUserPermission() {
+  //   const authStatus = await firebase.messaging().requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  //   if (enabled) {
+  //     console.log('Authorization status:', authStatus);
+  //   }
+  // }
   useEffect(()=>{
+    // if (requestUserPermission()) {
+    //   firebase.messaging().getToken().then(token => {
+    //     console.log(token);
+    //   })
+    // } else {
+    //   console.log(authStatus);
+    // }
   },[])
   if (!loaded) {
     return null;

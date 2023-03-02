@@ -23,7 +23,7 @@ const store = configureStore({
     reducer: {
         auth: authReducer,
         order: orderSlice
-    }
+    },
 })
 
 export default store
