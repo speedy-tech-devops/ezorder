@@ -16,14 +16,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jeerawut.appsppedyorder"
+      "bundleIdentifier": "com.ezorder.notification",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff",
+        "googleServicesFile": "./google-services.json"
       },
-      "package": "com.jeerawut.appsppedyorder"
+      "package": "com.ezorder.notification"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +36,7 @@
       }
     },
     "plugins": [
+      "@react-native-firebase/app",
       [
         "expo-build-properties",
         {

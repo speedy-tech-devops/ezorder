@@ -21,7 +21,20 @@ import Qrcode from './src/screens/Qrcode';
 import Camera from './src/screens/Camera';
 import HistoryBill from './src/screens/HistoryBill';
 import {AuthProvider} from './src/context/AuthProvider';
+import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
+const firebaseConfig = {
+  apiKey: "AIzaSyBFa_3D8d_Dr0M5h5d9ZiOZGAbBbXBrQZM",
+  authDomain: "ezorder-5e592.firebaseapp.com",
+  projectId: "ezorder-5e592",
+  databaseURL : "ezorder-5e592",
+  storageBucket: "ezorder-5e592.appspot.com",
+  messagingSenderId: "197533544935",
+  appId: "1:197533544935:web:539773013080b68cf5cd42",
+  measurementId: "G-7XDYV5YEB9"
+};
+
+firebase.initializeApp(firebaseConfig);
 const Stack = createStackNavigator();
 function App({route}) {
   const [loaded] = useFonts({
@@ -40,6 +53,13 @@ function App({route}) {
     }
   }
   useEffect(()=>{
+    if (requestUserPermission()) {
+      messaging().getToken().then(token => {
+        console.log(token);
+      })
+    } else {
+      console.log(authStatus);
+    }
   },[])
   if (!loaded) {
     return null;
