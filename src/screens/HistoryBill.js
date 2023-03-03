@@ -69,7 +69,7 @@ function HistoryBill({ route,navigation }) {
     data.length != 0 ? 
     <>
     
-        <View style={{ flex: 1,textAlign: "left", backgroundColor : "" , margin : 0 , flexDirection : "row",borderRadius :10,shadowColor: '#F0F0F0',shadowOffset: {width: 0, height: 1},shadowOpacity: 1, shadowRadius: 1, }}>
+        <View style={{ flex: 1,textAlign: "left", backgroundColor : "" , margin : 0 , flexDirection : "row",borderRadius :10, }}>
           <View style={{flex : 1}}>
             <View style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#F7F7F7" , flexDirection : "row"}}>
               <Text>หมายเลขบิล: AL0029904930</Text>

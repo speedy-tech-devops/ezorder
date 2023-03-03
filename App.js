@@ -77,7 +77,7 @@ function App({route}) {
             headerBackTitle : <Text>ออเดอร์</Text>,
             headerTintColor : "#000",
             headerBackTitleStyle: {
-              fontSize: "14px",
+              fontSize: 14,
             }
           }}  />
           <Stack.Screen name="TableDetail" component={Tabledetail}  options={Tabledetail.defaultNavigationOptions}/>

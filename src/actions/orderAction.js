@@ -19,7 +19,6 @@ export const orderList = createAsyncThunk('transaction/order',
         } catch (error) {
             const state = getState();
             // return custom error message from API if any
-            console.log(state)
             if (error.response && error.response.data.message) {
                 if (error.response.status === 401) dispatch(userRefresh())
                 return rejectWithValue(error.response.data.message)

@@ -6,10 +6,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { fetchDataAll } from '../actions/app';
 import Text from '../components/Text';
 import RadioButton from '../components/RadioButton';
+import { tableBilling, tableDetail, tableList } from '../actions/tableAction';
+import { useDispatch, useSelector } from 'react-redux'
+import moment from 'moment';
+import axios from 'axios';
+import { baseUrl } from '../services/endpoint';
 const Stack = createNativeStackNavigator();
 function Checkout({ navigation}) {
+  const {table,auth} = useSelector((state) => state);
+  const dispatch = useDispatch()
   const [email, setEmail] = useState("");
-  const [data , setData] = useState([])
+  const [billing , setBilling] = useState([])
   const [password, setPassword] = useState("");
   const PROP = [
     {
@@ -59,16 +66,36 @@ function Checkout({ navigation}) {
         text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
       },
   ]);
+  
+  const TableLoadDetail = async () => {
+    await dispatch(tableBilling(table.tableDetail._id))
+  //   const config = {
+  //     headers: {
+  //         'Content-Type': 'application/json',
+  //         'authorization': `Bearer ${auth.accessToken}`,
+  //         'speedy-branch' : auth.branch
+  //     },
+  // }
+  
+  // const res = await axios.get(`${baseUrl}/v1/transaction/billing/summary/${table.tableDetail._id}`, config)
+  // setBilling(res.data.data)
+    // await dispatch(tableDetail(otherParam))
+  }
   useEffect(() => {
+    TableLoadDetail()
   },[])
+  useEffect(() => {
+    if(table?.tableBilling){
+      setBilling(table?.tableBilling)
+    }
+  },[table])
   return (
-    data.length != 0 ? 
+    billing.length != 0 ? 
     <>
-    
-        <View style={{ flex: 1,textAlign: "left", backgroundColor : "" , margin : 0 , flexDirection : "row",borderRadius :10,shadowColor: '#F0F0F0',shadowOffset: {width: 0, height: 1},shadowOpacity: 1, shadowRadius: 1, }}>
+        <View style={{ flex: 1,textAlign: "left", backgroundColor : "" , margin : 0 , flexDirection : "row",borderRadius :10, }}>
           <View style={{flex : 1}}>
             <View style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#F7F7F7" , flexDirection : "row"}}>
-              <Text>หมายเลขบิล: AL0029904930</Text>
+              <Text>หมายเลขบิล: {billing.billing_no}</Text>
               <Text>หมดเวลา:: <Text style={{color : "red"}}>16:02</Text></Text>
             </View>
             <View  style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#16284B" , flexDirection : "row"}}>
@@ -76,7 +103,23 @@ function Checkout({ navigation}) {
               </View>
             <ScrollView style={{flex : 1 }}>
               {/* ItemList */}
-              <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
+              {
+                billing.orders.map((item,i) => {
+                  return (
+                    <View key={i} style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
+                      <View style={{flex : 1,paddingRight : 15}}>
+                          <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>{item.product.name['th']}</Text>
+                          <Text style={{fontSize : 14,}}>{item.options.map((opt) => {return opt.option.name['th'] + ","})}</Text>
+                          {/* <Text style={{fontSize : 14,color: "red"}}>ขอใส่แก้วกลับบ้านด้วยค่ะ</Text> */}
+                      </View>
+                      <View style={{paddingBottom : 15}}>
+                          <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿{item.total_amount == null ? item.unit_price : item.total_amount} x {item.qty}</Text>
+                      </View>
+                    </View>
+                  )
+                })
+              }
+              {/* <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
                 <View style={{flex : 1,paddingRight : 15}}>
                     <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>นมถั่วเหลืองสูตร(เจ)</Text>
                     <Text style={{fontSize : 14,}}>เยลลี่, ฟรุ๊ตสลัด, หวานน้อย เยลลี่, ฟรุ๊ตสลัด, หวานน้อย เยลลี่, ฟรุ๊ตสลัด, หวานน้อย.0</Text>
@@ -103,7 +146,7 @@ function Checkout({ navigation}) {
                 <View style={{paddingBottom : 15}}>
                     <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿65 x 1</Text>
                 </View>
-              </View>
+              </View> */}
               <View style={{backgroundColor : "#fff" ,marginTop : 15 ,padding :15}}>
                 <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>เลือกวิธีชำระเงิน</Text>
                 <RadioButton PROP={PROP} />
@@ -131,7 +174,7 @@ function Checkout({ navigation}) {
               <Text  style={{fontSize : 14 ,color : "#717171"}}>รวมค่าอาหาร</Text>
             </View>
             <View style={{margin : 0}}>
-            <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#000"}}>330.00</Text>
+            <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#000"}}>{billing.total_amount}</Text>
             </View>
         </View>
         <View style={{flexDirection : "row",justifyContent : "space-between",padding : 15 , paddingBottom : 5 , paddingTop : 5}}>
@@ -139,7 +182,7 @@ function Checkout({ navigation}) {
               <Text  style={{fontSize : 14 ,color : "#717171"}}>VAT 7%</Text>
             </View>
             <View style={{margin : 0}}>
-            <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#000"}}>23.10</Text>
+            <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#000"}}>{parseInt(billing.vat_amount).toFixed(2)}</Text>
             </View>
         </View>
         <View style={{flexDirection : "row",justifyContent : "space-between", padding : 15 , paddingBottom : 15 , paddingTop : 5 , borderBottomWidth : 1 , borderBottomColor : "#F0F0F0"}}>
@@ -153,7 +196,7 @@ function Checkout({ navigation}) {
         <View style={{flexDirection : "row",justifyContent : "space-between"}}>
             <View style={{padding : 15,paddingLeft : 20}}>
               <Text style={{fontSize : 12}}>ยอดรวมสุทธิ</Text>
-              <Text  style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold" ,color : "red"}}>฿569.00</Text>
+              <Text  style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold" ,color : "red"}}>฿{billing.total_amount}</Text>
             </View>
             <View style={{padding : 15,paddingLeft : 20}}>
               <TouchableOpacity style={{width : 194 , height : 48 , borderColor : "#16284B" ,borderWidth : 1,alignItems : "center",justifyContent:"center" , borderRadius : 10 , backgroundColor : "#16284B" }}   onPress={() => navigation.navigate('Qrcode')}>

@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Text from '../components/Text';
 import { orderList ,orderAccept} from '../actions/orderAction';
 import { useDispatch, useSelector } from 'react-redux'
+import moment from 'moment';
 const Stack = createNativeStackNavigator();
 function Order({ navigation }) {
   const {order,auth} = useSelector((state) => state);
@@ -32,9 +33,12 @@ function Order({ navigation }) {
                   "details": order.details.map((v) => {return v._id})
               }
           }
-          console.log(data)
+          // console.log(data)
           let acceptOrder = await dispatch(orderAccept(data))
-          console.log('acct',acceptOrder)
+          if(!order.error){
+            OrderLoadData()
+          }
+          console.log('acct',order)
         }
       },
   ]);
@@ -67,12 +71,12 @@ function Order({ navigation }) {
     }
     
   },[order])
+  const OrderLoadData = async () => {
+    await dispatch(orderList())
+    
+  }
   useEffect(() => {
-    console.log('order',auth.userInfo)
-    const OrderLoadData = async () => {
-      await dispatch(orderList())
-      
-    }
+    
     OrderLoadData()
   },[auth.userInfo])
   
@@ -83,7 +87,7 @@ function Order({ navigation }) {
       {
         orderLists.map((item,i) => {
           return (
-            <View style={{ flex: 1,textAlign: "left", backgroundColor : "#fff" , margin : 15 , flexDirection : "row",borderRadius :10,shadowColor: '#F0F0F0',shadowOffset: {width: 0, height: 1},shadowOpacity: 1, shadowRadius: 1, }}>
+            <View style={{ flex: 1,textAlign: "left", backgroundColor : "#fff" , margin : 15 , flexDirection : "row",borderRadius :10, }}>
               <View style={{flex : 1}}>
                 <View style={styles.shadowProp}>
                   <View style={{  width : 50, height : 50, alignContent : "center", alignItems : "center" , backgroundColor : "#006FFF", justifyContent : "center" , borderRadius : 5 }}>
@@ -94,7 +98,7 @@ function Order({ navigation }) {
                     <Text style={{color: "#000",fontWeight : "bold",fontSize : 18, paddingBottom : 5}}> {item.details.length} รายการ</Text>
                     <Text style={{color: "#000",fontSize : 12, color : "#595959"}}>{item.order_no} </Text>
                   </View>
-                  <View style={{ flexDirection : "row" }}><Text>13:17 น.</Text></View>
+                  <View style={{ flexDirection : "row" }}><Text>{moment(item.order_date).format('hh:mm a')}</Text></View>
                 </View>
                 {/* <View style={{ flex: 0,textAlign: "left",padding : 10,paddingLeft : 20, backgroundColor : "#F7F7F7" , flexDirection : "row"}}>
                   <Text>เครื่องดื่ม</Text>
@@ -102,16 +106,16 @@ function Order({ navigation }) {
                 {
                   item.details.map((product,i) => {
                     return (
-                      <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0"}}>
+                      <View style={{ flex: 0,textAlign: "left",paddingTop : 10,paddingLeft : 20,paddingRight : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0"}}>
                       <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>{product.product.name['th']}</Text>
-                      <Text style={{fontSize : 14,}}>{product.options.map((opt,i)=>{
+                      {product.options.length != 0 && <Text style={{fontSize : 14,}}>{product.options.map((opt,i)=>{
                         return opt.option.name['th'] +','
-                      })}</Text>
+                      })}</Text>}
                       {product.note != null && <Text style={{fontSize : 14,color : "red"}}>{product.note}</Text>}
                       <View style={{position : "absolute",top : 12,right : 15,backgroundColor : (product.status == "PENDING" && "#FFA800" || product.status == "PROCESSING" && "#00D42F" || product.status == "REJECTED" && "#FF0000"),padding : 5, borderRadius : 5}}>
                         <Text style={{fontSize : 12, color : "#fff"}}>{product.status}</Text>
                       </View>
-                      <View style={{ flexDirection : "row", alignContent : "center", justifyContent : "space-between",paddingTop : 20 ,paddingBottom : 15}}>
+                      <View style={{ flexDirection : "row", alignContent : "center", justifyContent : "space-between",paddingTop : 0 ,paddingBottom : 15}}>
                         <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿{product.total_amount} x {product.qty}</Text>
                         <TouchableOpacity>
                           <Text>ยกเลิกรายการ</Text>

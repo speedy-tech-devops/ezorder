@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { tableList } from '../actions/tableAction'
+import { tableBilling, tableDetail, tableList } from '../actions/tableAction'
 
 
 const initialState = {
   loading: false,
   isLoggedIn: false,
   tableState: null, // for user object
+  tableDetail : null,
   error: null
 }
 
@@ -35,6 +36,36 @@ const tableSlice = createSlice({
         state.tableState = payload
       })
       .addCase(tableList.rejected, (state, { payload }) => {
+        state.loading = false
+        state.error = payload
+      })
+      .addCase(tableDetail.pending, (state) => {
+        state.loading = true
+        state.isLoggedIn = false
+        state.error = null
+        // state.branch = null
+      })
+      .addCase(tableDetail.fulfilled, (state, { payload }) => {
+        state.loading = false
+        state.isLoggedIn = true
+        state.tableDetail = payload.data
+      })
+      .addCase(tableDetail.rejected, (state, { payload }) => {
+        state.loading = false
+        state.error = payload
+      })
+      .addCase(tableBilling.pending, (state) => {
+        state.loading = true
+        state.isLoggedIn = false
+        state.error = null
+        // state.branch = null
+      })
+      .addCase(tableBilling.fulfilled, (state, { payload }) => {
+        state.loading = false
+        state.isLoggedIn = true
+        state.tableBilling = payload.data
+      })
+      .addCase(tableBilling.rejected, (state, { payload }) => {
         state.loading = false
         state.error = payload
       })

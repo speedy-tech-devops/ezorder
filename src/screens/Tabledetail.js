@@ -5,8 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { fetchDataAll } from '../actions/app';
 import Text from '../components/Text';
+import { tableDetail, tableList } from '../actions/tableAction';
+import { useDispatch, useSelector } from 'react-redux'
+import moment from 'moment';
 const Stack = createNativeStackNavigator();
 function TableDetail({ route, navigation}) {
+  const {table,auth} = useSelector((state) => state);
+  const dispatch = useDispatch()
   const [email, setEmail] = useState("");
   const [data , setData] = useState([])
   
@@ -46,82 +51,69 @@ function TableDetail({ route, navigation}) {
         text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
       },
   ]);
+  const TableLoadDetail = async () => {
+    await dispatch(tableDetail(otherParam))
+  }
+  useEffect(() => {
+    console.log(table)
+    if(table?.tableDetail){
+      setData(table?.tableDetail)
+    }
+  },[table])
   useEffect(() => {
     navigation.setOptions({
         title: itemId,
     });
-    fetchDataAll()
+    TableLoadDetail()
   },[])
 
   return (
     data.length != 0 ? 
     <>
     <ScrollView style={{flex : 1 }}>
-      <View style={{ flex: 1,textAlign: "left" , margin : 0 , flexDirection : "row",borderRadius :10,shadowColor: '#F0F0F0',shadowOffset: {width: 0, height: 1},shadowOpacity: 1, shadowRadius: 1, }}>
+      
+      <View style={{ flex: 1,textAlign: "left" , margin : 0 , flexDirection : "row",borderRadius :10, }}>
           <View style={{flex : 1}}>
             <View style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#F7F7F7" , flexDirection : "row"}}>
-              <Text>หมายเลขบิล: AL0029904930</Text>
-              <Text>หมดเวลา:: <Text style={{color : "red"}}>16:02</Text></Text>
+              <Text>หมายเลขบิล: {data.billing_no}</Text>
+              <Text>หมดเวลา:: <Text style={{color : "red"}}>{moment(data.order_date).format('hh:mm')}</Text></Text>
             </View>
-            <View style={{marginBottom : 10}}>
-                <View  style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#16284B" , flexDirection : "row"}}>
-                    <Text style={{color : "#fff"}}>OD0000042</Text>
-                    <Text style={{color : "#fff"}}>13:28 น.</Text>
-                </View>
-                {/* ItemList */}
-                <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
-                <View style={{flex : 1,paddingRight : 15}}>
-                    <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>นมถั่วเหลืองสูตร(เจ)</Text>
-                    <Text style={{flexWarp : "warp",fontSize : 14,}}>เยลลี่, ฟรุ๊ตสลัด, หวานน้อย เยลลี่, ฟรุ๊ตสลัด, หวานน้อย เยลลี่, ฟรุ๊ตสลัด, หวานน้อย.0</Text>
-                    <Text style={{flexWarp : "warp",fontSize : 14,color: "red"}}>ขอใส่แก้วกลับบ้านด้วยค่ะ</Text>
-                    <View  style={{ marginTop : 10}}>
-                            <View style={{ backgroundColor : "#00D42F",padding : 5, borderRadius : 5 , alignSelf: 'flex-start'}}>
-                                <Text style={{flexWarp : "warp",fontSize : 12, color : "#fff"}}>พร้อมเสิร์ฟ</Text>
-                            </View>
+            {
+              data.orders.map((order) => {
+                return (
+                  <View style={{marginBottom : 10}} key={order.order_no}>
+                    <View  style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#16284B" , flexDirection : "row"}}>
+                        <Text style={{color : "#fff"}}>{order.order_no}</Text>
+                        <Text style={{color : "#fff"}}>{moment(order.order_date).format('hh:mm')} น.</Text>
                     </View>
-                </View>
-                <View style={{paddingBottom : 15}}>
-                    <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿80 x 1</Text>
-                </View>
-                </View>
-                <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
-                <View style={{flex : 1,paddingRight : 15}}>
-                    <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>ชาเขียวมะลิรสพีช</Text>
-                    <Text style={{flexWarp : "warp",fontSize : 14,}}>Golden Bubble, หวานปกติ</Text>
-                    <Text style={{flexWarp : "warp",fontSize : 14,color: "red"}}>ขอใส่แก้วกลับบ้านด้วยค่ะ</Text>
-                    <View  style={{ marginTop : 10 , flexDirection : "row"}}>
-                            <View style={{ backgroundColor : "#FFA800",padding : 5, borderRadius : 5 , alignSelf: 'flex-start' ,  marginRight : 10}}>
-                                <Text style={{flexWarp : "warp",fontSize : 12, color : "#fff"}}>กำลังทำ</Text>
-                            </View>
-                    </View>
-                </View>
-                <View style={{paddingBottom : 15}}>
-                    <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿80 x 1</Text>
-                </View>
-                </View>
-            </View>
-            <View style={{marginBottom : 10}}>
-                <View  style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#16284B" , flexDirection : "row"}}>
-                    <Text style={{color : "#fff"}}>OD0000042</Text>
-                    <Text style={{color : "#fff"}}>13:28 น.</Text>
-                </View>
-                {/* ItemList */}
-                <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
-                    <View style={{flex : 1,paddingRight : 15}}>
-                        <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>ชาเขียวมะลิรสพีช</Text>
-                        <Text style={{flexWarp : "warp",fontSize : 14,}}>Golden Bubble, หวานปกติ</Text>
-                        <Text style={{flexWarp : "warp",fontSize : 14,color: "red"}}>ขอใส่แก้วกลับบ้านด้วยค่ะ</Text>
-                        <View  style={{ marginTop : 10 , flexDirection : "row"}}>
-                                <View style={{ backgroundColor : "#FFA800",padding : 5, borderRadius : 5 , alignSelf: 'flex-start' ,  marginRight : 10}}>
-                                    <Text style={{flexWarp : "warp",fontSize : 12, color : "#fff"}}>กำลังทำ</Text>
+                    {/* ItemList */}
+                    {
+                      order.details.map((orderdetail,i) => {
+                        return (
+                          <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
+                            <View style={{flex : 1,paddingRight : 15}}>
+                                <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>{orderdetail.product.name['th']}</Text>
+                                <Text style={{fontSize : 14,}}>{orderdetail.options.map((opt) => {return opt.option.name['th'] + ","})}</Text>
+                                {orderdetail.note && <Text style={{fontSize : 14,color: "red"}}>{orderdetail.note}</Text>}
+                                <View  style={{ marginTop : 10}}>
+                                        <View style={{ backgroundColor : (orderdetail.status == "PENDING" && "#FFA800" || orderdetail.status == "PROCESSING" && "#00D42F" || orderdetail.status == "REJECTED" && "#FF0000"),padding : 5, borderRadius : 5 , alignSelf: 'flex-start'}}>
+                                            <Text style={{fontSize : 12, color : "#fff"}}>{orderdetail.status}</Text>
+                                        </View>
                                 </View>
-                        </View>
-                    </View>
-                    <View style={{paddingBottom : 15}}>
-                        <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿80 x 1</Text>
-                    </View>
+                            </View>
+                            <View style={{paddingBottom : 15}}>
+                                <Text style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold"}}>฿{orderdetail.amount} x {orderdetail.qty}</Text>
+                            </View>
+                          </View>
+                        )
+                      })
+                    }
                 </View>
-            </View>
+                )
+              })
+            }
+            
+            
             
           </View>
       </View>
@@ -130,7 +122,7 @@ function TableDetail({ route, navigation}) {
         <View style={{flexDirection : "row",justifyContent : "space-between"}}>
             <View style={{padding : 15,paddingLeft : 20}}>
             <Text style={{fontSize : 12}}>รวมค่าอาหาร</Text>
-            <Text  style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold" ,color : "red"}}>฿569.00</Text>
+            <Text  style={{fontSize : 16,fontWeight : "bold" ,fontFamily : "Kanit-Bold" ,color : "red"}}>฿{parseInt(data.total_amount).toFixed(2)}</Text>
             </View>
             <View style={{padding : 15,paddingLeft : 20}}>
             <TouchableOpacity style={{width : 194 , height : 48 , borderColor : "#16284B" ,borderWidth : 1,alignItems : "center",justifyContent:"center" , borderRadius : 10 , backgroundColor : "#16284B" }}   onPress={() => navigation.navigate('Checkout', {

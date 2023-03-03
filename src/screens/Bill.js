@@ -15,7 +15,7 @@ function Bill({ navigation}) {
   return (
     data.length != 0 ? 
     <ScrollView style={{flex : 1 }}>
-      <View style={{ flex: 1,textAlign: "left", backgroundColor : "#fff" , margin : 15 , flexDirection : "row",borderRadius :10,shadowColor: '#F0F0F0',shadowOffset: {width: 0, height: 1},shadowOpacity: 1, shadowRadius: 1, }}>
+      <View style={{ flex: 1,textAlign: "left", backgroundColor : "#fff" , margin : 15 , flexDirection : "row",borderRadius :10, }}>
           <View style={{flex : 1}}>
             <View style={styles.shadowProp}>
               <View style={{ flex : "auto", width : 50, height : 50, alignContent : "center", alignItems : "center" , backgroundColor : "#006FFF", justifyContent : "center" , borderRadius : 5 }}>

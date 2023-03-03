@@ -6,8 +6,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { fetchDataAll } from '../actions/app';
 import Text from '../components/Text';
+import { tableList } from '../actions/tableAction';
+import { useDispatch, useSelector } from 'react-redux'
+import SvgQRCode from 'react-native-qrcode-svg';
 const Stack = createNativeStackNavigator();
 function Qrcode({ route, navigation ,fetchDataAll,data}) {
+  const {table,auth} = useSelector((state) => state);
+  const dispatch = useDispatch()
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [type, setType] = useState(CameraType.back);
@@ -54,8 +59,11 @@ function Qrcode({ route, navigation ,fetchDataAll,data}) {
     navigation.setOptions({
         title: 'คิวอาร์โค้ด',
     });
-    fetchDataAll()
   },[])
+  function Promtpay() {
+    console.log(auth)
+    return <SvgQRCode value={table.tableBilling.promptPayState} size={width-100} />;
+  }
   const dimensions = Dimensions.get('window');
   const imageHeight = Math.round(dimensions.width * 9 / 16);
   const imageWidth = dimensions.width;
@@ -65,8 +73,6 @@ function Qrcode({ route, navigation ,fetchDataAll,data}) {
     return desiredWidth / width * height
 }
   return (
-    data.length != 0 ? 
-    <>
     <SafeAreaView forceInset={{ top: 'never'}} style={{flex: 1,backgroundColor : "#EFF0F5"}}>
         <View style={{ alignItems: 'center',textAlign: "left",backgroundColor : "#fff" ,margin : 15 , borderRadius : 5 }} onLayout={(event) => { 
               setWidth(event.nativeEvent.layout.width)
@@ -75,7 +81,12 @@ function Qrcode({ route, navigation ,fetchDataAll,data}) {
                 desiredWidth: event.nativeEvent.layout.width
             }))
           }}>
-          <Image source={require('../../assets/promtpay.png')} style={{width : width, height : height, borderRadius : 5 }} ></Image>
+            <View style={{paddingBottom : 15,paddingTop : 15}}>
+              <Image source={require('../../assets/prompt-pay-logo.png')} resizeMode="contain" style={{width: 150,height:150}}></Image>
+              <Promtpay />
+            </View>
+            
+          {/* <Image source={require('../../assets/promtpay.png')} style={{width : width, height : height, borderRadius : 5 }} ></Image> */}
           <Text  style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>สแกนคิวอาร์เพื่อโอนเงินเข้าบัญชี</Text> 
           <Text  style={{fontSize : 16,paddingBottom : 5}}>The Coffee Club</Text>
           <Text  style={{fontSize : 16,paddingBottom : 30}}>รหัสร้านค้า: 382779008716264</Text>
@@ -86,14 +97,13 @@ function Qrcode({ route, navigation ,fetchDataAll,data}) {
             </TouchableOpacity>
         </View>
     </SafeAreaView>
-    </> : 
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',textAlign: "left" }}>
-        <View style={{paddingBottom : 30}}>
-          <Image source={require('../../assets/Notbill.png')}></Image>
-        </View>
-        <Text style={{fontWeight : "bold",fontSize : 18}}>Qrcode</Text>
-        <Text style={{color : "#949494"}}>ยังไม่มีรายการใหม่เข้ามา</Text>
-    </View>
+    // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',textAlign: "left" }}>
+    //     <View style={{paddingBottom : 30}}>
+    //       <Image source={require('../../assets/Notbill.png')}></Image>
+    //     </View>
+    //     <Text style={{fontWeight : "bold",fontSize : 18}}>Qrcode</Text>
+    //     <Text style={{color : "#949494"}}>ยังไม่มีรายการใหม่เข้ามา</Text>
+    // </View>
   );
 }
 const styles = StyleSheet.create({
@@ -140,15 +150,6 @@ const styles = StyleSheet.create({
       }
       
   });
-  const mapStateToProps = state => {
-    return{
-      data: state.app.data,
-    }
-  }
-  
-  const mapDispatchToProps = {
-    fetchDataAll
-  }
 Qrcode.defaultNavigationOptions = ({navigation}) => {
     return {
       title: 'My home',
@@ -160,4 +161,4 @@ Qrcode.defaultNavigationOptions = ({navigation}) => {
         }
   
 }}
-  export default connect(mapStateToProps, mapDispatchToProps)(Qrcode);
+  export default Qrcode;

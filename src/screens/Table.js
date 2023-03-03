@@ -36,7 +36,9 @@ function Table({ navigation }) {
         {
           data.map((item,i) => {
             return (
-              <TouchableOpacity onPress={ () => { navigation.navigate('TableDetail', {
+              <TouchableOpacity onPress={ () => { 
+                if(item.status == "PROCESSING")
+                navigation.navigate('TableDetail', {
                 itemId: item.name['th'],
                 otherParam: item.booking,
               })}}>
@@ -46,7 +48,7 @@ function Table({ navigation }) {
                   {/* <Text style={{color: "#000",fontSize: 16,lineHeight: 20}}>{โต๊ะ}</Text> */}
                 </View>
               </TouchableOpacity>
-            )
+            ) 
           })
         }
         {/* <TouchableOpacity>
