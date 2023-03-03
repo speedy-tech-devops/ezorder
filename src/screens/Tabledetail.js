@@ -55,7 +55,6 @@ function TableDetail({ route, navigation}) {
     await dispatch(tableDetail(otherParam))
   }
   useEffect(() => {
-    console.log(table)
     if(table?.tableDetail){
       setData(table?.tableDetail)
     }
@@ -79,9 +78,9 @@ function TableDetail({ route, navigation}) {
               <Text>หมดเวลา:: <Text style={{color : "red"}}>{moment(data.order_date).format('hh:mm')}</Text></Text>
             </View>
             {
-              data.orders.map((order) => {
+              data.orders.map((order,i) => {
                 return (
-                  <View style={{marginBottom : 10}} key={order.order_no}>
+                  <View style={{marginBottom : 10}} key={i}>
                     <View  style={{ flex: 0,justifyContent: "space-between",textAlign: "left",padding : 10,paddingLeft : 15, backgroundColor : "#16284B" , flexDirection : "row"}}>
                         <Text style={{color : "#fff"}}>{order.order_no}</Text>
                         <Text style={{color : "#fff"}}>{moment(order.order_date).format('hh:mm')} น.</Text>
@@ -90,13 +89,14 @@ function TableDetail({ route, navigation}) {
                     {
                       order.details.map((orderdetail,i) => {
                         return (
-                          <View style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
+                          <View key={i+orderdetail._id} style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
                             <View style={{flex : 1,paddingRight : 15}}>
                                 <Text style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>{orderdetail.product.name['th']}</Text>
                                 <Text style={{fontSize : 14,}}>{orderdetail.options.map((opt) => {return opt.option.name['th'] + ","})}</Text>
                                 {orderdetail.note && <Text style={{fontSize : 14,color: "red"}}>{orderdetail.note}</Text>}
+                                
                                 <View  style={{ marginTop : 10}}>
-                                        <View style={{ backgroundColor : (orderdetail.status == "PENDING" && "#FFA800" || orderdetail.status == "PROCESSING" && "#00D42F" || orderdetail.status == "REJECTED" && "#FF0000"),padding : 5, borderRadius : 5 , alignSelf: 'flex-start'}}>
+                                        <View style={{ backgroundColor : (orderdetail.status == "PENDING" && "#FFA800" || orderdetail.status == "PROCESSING" || orderdetail.status == "COMPLETE"  && "#00D42F" || orderdetail.status == "REJECTED" && "#FF0000"),padding : 5, borderRadius : 5 , alignSelf: 'flex-start'}}>
                                             <Text style={{fontSize : 12, color : "#fff"}}>{orderdetail.status}</Text>
                                         </View>
                                 </View>

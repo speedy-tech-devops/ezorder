@@ -9,6 +9,8 @@ import Text from '../components/Text';
 import { tableList } from '../actions/tableAction';
 import { useDispatch, useSelector } from 'react-redux'
 import SvgQRCode from 'react-native-qrcode-svg';
+import axios from 'axios';
+import { baseUrl } from '../services/endpoint';
 const Stack = createNativeStackNavigator();
 function Qrcode({ route, navigation ,fetchDataAll,data}) {
   const {table,auth} = useSelector((state) => state);
@@ -22,14 +24,41 @@ function Qrcode({ route, navigation ,fetchDataAll,data}) {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
   }
   const ApporoveOrder = () =>
-    Alert.alert('ยืนยันออเดอร์', 'คุณต้องการส่งออเดอร์นี้ใช่หรือไม่', [
+    Alert.alert('ยืนยันการชำระเงิน', 'คุณต้องการชำระเงินนี้ใช่หรือไม่', [
       {
         text: 'ยกเลิก',
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {
-        text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
+        text: 'ยืนยัน', onPress: async () => {
+            var data = JSON.stringify({
+              "billing": table.tableBilling._id,
+              "payment_type": "QR",
+              "payment_total": parseInt(table.tableBilling.total_amount)
+            });
+            var config = {
+              method: 'post',
+              maxBodyLength: Infinity,
+                url: `${baseUrl}/v1/transaction/checkbill`,
+                headers: { 
+                  'Content-Type': 'application/json',
+                    'authorization': `Bearer ${auth.accessToken}`,
+                    'speedy-branch' : auth.branch
+                },
+                data : data
+              }
+            axios(config)
+            .then(function (response) {
+              console.log(JSON.stringify(response.data));
+              Alert.alert('ทำการชำระเงินเรียบร้อย')
+              navigation.navigate('Menu')
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+            
+        }
       },
   ]);
   const ApporoveServeOrders
@@ -81,19 +110,19 @@ function Qrcode({ route, navigation ,fetchDataAll,data}) {
                 desiredWidth: event.nativeEvent.layout.width
             }))
           }}>
-            <View style={{paddingBottom : 15,paddingTop : 15}}>
+            <View style={{paddingBottom : 25,paddingTop : 15,alignContent:'center',justifyContent:'center',alignItems:'center'}}>
               <Image source={require('../../assets/prompt-pay-logo.png')} resizeMode="contain" style={{width: 150,height:150}}></Image>
               <Promtpay />
             </View>
             
           {/* <Image source={require('../../assets/promtpay.png')} style={{width : width, height : height, borderRadius : 5 }} ></Image> */}
           <Text  style={{fontSize : 16,paddingBottom : 5, fontFamily : "Kanit-Bold"}}>สแกนคิวอาร์เพื่อโอนเงินเข้าบัญชี</Text> 
-          <Text  style={{fontSize : 16,paddingBottom : 5}}>The Coffee Club</Text>
+          <Text  style={{fontSize : 16,paddingBottom : 5}}>{auth.userInfo.first_name} {auth.userInfo.first_name}</Text>
           <Text  style={{fontSize : 16,paddingBottom : 30}}>รหัสร้านค้า: 382779008716264</Text>
         </View>
         <View style={{padding : 15,paddingLeft : 20}}>
-            <TouchableOpacity style={{height : 48 , borderColor : "#16284B" ,borderWidth : 1,alignItems : "center",justifyContent:"center" , borderRadius : 10}}   onPress={() =>  navigation.navigate('Camera')}>
-              <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#16284B"}}>ถ่ายสลิปการโอนเงิน</Text>
+            <TouchableOpacity style={{height : 48 , borderColor : "#16284B" ,borderWidth : 1,alignItems : "center",justifyContent:"center" , borderRadius : 10}}   onPress={() =>  ApporoveOrder()}>
+              <Text style={{fontSize : 16,fontFamily : "Kanit-Bold" , color : "#16284B"}}>เช็ดบิล</Text>
             </TouchableOpacity>
         </View>
     </SafeAreaView>
