@@ -21,6 +21,7 @@ function Login({ navigation ,fetchDataAll}) {
   },[auth])
   const Login_app_summit = async () => {
     await dispatch(userLogin({ email: email, password: password }))
+    console.log(!error)
     if(!error){
       await dispatch(userProfile())
     }

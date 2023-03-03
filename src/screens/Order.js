@@ -66,9 +66,9 @@ function Order({ navigation }) {
       setOrderLists(order?.orderState?.data)
     }
     
-  },[order,order.loading])
+  },[order])
   useEffect(() => {
-    // console.log(auth.userInfo)
+    console.log('order',auth.userInfo)
     const OrderLoadData = async () => {
       await dispatch(orderList())
       
