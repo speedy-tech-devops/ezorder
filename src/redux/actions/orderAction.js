@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { baseUrl } from '../services/endpoint'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { baseUrl } from '../../services/endpoint'
+import { logout } from '../features/authSlice';
 
 export const orderList = createAsyncThunk('transaction/order',
     async (arg, { getState, rejectWithValue, dispatch }) => {
@@ -11,7 +11,7 @@ export const orderList = createAsyncThunk('transaction/order',
                 headers: {
                     'Content-Type': 'application/json',
                     'authorization': `Bearer ${state.auth.accessToken}`,
-                    'speedy-branch' : state.auth.branch
+                    'speedy-branch': state.auth.branch
                 },
             }
             const { data } = await axios.get(`${baseUrl}/v1/transaction/order`, config)
@@ -20,7 +20,7 @@ export const orderList = createAsyncThunk('transaction/order',
             const state = getState();
             // return custom error message from API if any
             if (error.response && error.response.data.message) {
-                if (error.response.status === 401) dispatch(userRefresh())
+                if (error.response.status === 401) dispatch(logout())
                 return rejectWithValue(error.response.data.message)
             }
             return rejectWithValue(error.message)
@@ -33,22 +33,22 @@ export const orderAccept = createAsyncThunk('transaction/accept',
     async (arg, { getState, rejectWithValue }) => {
         try {
             const state = getState();
-            var config = {
+            const config = {
                 method: 'post',
-                maxBodyLength: Infinity,
                 url: `${baseUrl}/v1/transaction/order/accept`,
-                headers: { 
-                  'speedy-branch': state.auth.branch, 
-                  'Authorization': `Bearer ${state.auth.accessToken}`,
-                  'Content-Type': 'application/json'
+                headers: {
+                    'speedy-branch': state.auth.branch,
+                    'Authorization': `Bearer ${state.auth.accessToken}`,
+                    'Content-Type': 'application/json'
                 },
-                data : JSON.stringify(arg)
-              };
+                data: JSON.stringify(arg)
+            };
             const { data } = await axios(config)
             return data
         } catch (error) {
             // return custom error message from API if any
             if (error.response && error.response.data.message) {
+                if (error.response.status === 401) dispatch(logout())
                 return rejectWithValue(error.response.data.message)
             }
             return rejectWithValue(error.message)

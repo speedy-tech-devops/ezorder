@@ -1,10 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { tableBilling, tableDetail, tableList } from '../actions/tableAction'
 
-
 const initialState = {
   loading: false,
-  isLoggedIn: false,
   tableState: null, // for user object
   tableDetail : null,
   error: null

@@ -1,13 +1,12 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { connect } from 'react-redux';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
 
 const AuthStack = createStackNavigator(
     {
-      Login: Login,
+        Login: Login,
     },
     {
         initialRouteName: 'Login',

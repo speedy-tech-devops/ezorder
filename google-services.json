@@ -29,6 +29,13 @@
             {
               "client_id": "197533544935-57arl8g5n3sq6ra02sbf9mf3bmmaknrv.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "197533544935-44cjls8e6q4gna643ohrl6rpcr24u340.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ezorder.notification"
+              }
             }
           ]
         }

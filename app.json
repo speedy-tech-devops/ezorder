@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ezorder.notification",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./google-service/ios/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { userLogin, userProfile, userRefresh, userTokenMe } from '../actions/authAction'
+import { userLogin, userProfile, userFcmToken } from '../actions/authAction'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const accessToken = null
 const refreshToken = null
 
@@ -12,7 +13,10 @@ const initialState = {
   branch: "",
   accessToken,
   refreshToken,
-  error: null
+  isLogout: false,
+  error: null,
+  fcmToken: null,
+  deviceId: null
 }
 
 const authSlice = createSlice({
@@ -20,11 +24,23 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.clear() // deletes token from storage
+      console.log('logout');
+      AsyncStorage.clear();
       state.isLoggedIn = false
+      state.isLogout = true
       state.accessToken = null
       state.refreshToken = null
-      // state.branch = null
+      state.branch = null
+    },
+    changeToken: (state, action) => {
+      state.accessToken = action.payload.accessToken
+      state.refreshToken = action.payload.refreshToken
+    },
+    changeFcmToken: (state, action) => {
+      state.fcmToken = action.payload.token
+    },
+    changeDeviceId: (state, action) => {
+      state.deviceId = action.payload.deviceId
     },
   },
   extraReducers: (builder) => {
@@ -36,7 +52,6 @@ const authSlice = createSlice({
         // state.branch = null
       })
       .addCase(userLogin.fulfilled, (state, { payload }) => {
-        console.log(payload.token)
         state.loading = false
         state.isLoggedIn = true
         state.accessToken = payload.token
@@ -44,6 +59,7 @@ const authSlice = createSlice({
       })
       .addCase(userLogin.rejected, (state, { payload }) => {
         state.loading = false
+        state.isLoggedIn = false
         state.error = payload
       })
       .addCase(userProfile.pending, (state) => {
@@ -52,6 +68,7 @@ const authSlice = createSlice({
       })
       .addCase(userProfile.fulfilled, (state, { payload }) => {
         state.loading = false
+        state.isLoggedIn = true
         state.branch = payload.branch[0]?._id
         state.userInfo = payload
       })
@@ -60,23 +77,19 @@ const authSlice = createSlice({
         state.branch = ""
         state.error = payload
       })
-      .addCase(userTokenMe.pending, (state) => {
+      .addCase(userFcmToken.pending, (state) => {
         state.loading = true
         state.error = null
       })
-      .addCase(userTokenMe.fulfilled, (state, { payload }) => {
+      .addCase(userFcmToken.fulfilled, (state) => {
         state.loading = false
-        state.branch = payload.branch[0]?._id
-        state.accessToken = payload.token
-        state.userInfo = payload
       })
-      .addCase(userTokenMe.rejected, (state, { payload }) => {
+      .addCase(userFcmToken.rejected, (state, { payload }) => {
         state.loading = false
-        state.branch = ""
         state.error = payload
       })
   },
 })
-export const { logout } = authSlice.actions
+export const { logout, changeToken, changeFcmToken, changeDeviceId } = authSlice.actions
 
 export default authSlice.reducer

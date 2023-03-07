@@ -1,15 +1,10 @@
 import React, { useEffect ,useState } from 'react';
 import { View , Button ,Image,StyleSheet,TextInput ,TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { fetchDataAll } from '../actions/app';
 import Text from '../components/Text';
 import SearchBar from '../components/SearchBar';
 const Stack = createNativeStackNavigator();
 function History({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [data , setData] = useState([])
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
@@ -91,10 +86,6 @@ const styles = StyleSheet.create({
         height: 45,
         marginBottom: 20,
         alignItems: "flex-start",
-      },
-      forgot_button: {
-        height: 30,
-        marginBottom: 10,
       },
       loginBtn: {
         width: "70%",

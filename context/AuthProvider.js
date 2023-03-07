@@ -1,65 +1,32 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useContext, useEffect, useState } from "react"
-import { userTokenMe } from '../src/actions/authAction';
+import { createContext, useEffect, useState } from "react"
+import { changeToken, logout } from '../src/redux/features/authSlice'
 import { useDispatch, useSelector } from 'react-redux'
+
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
-    const { auth } = useSelector((state) => state);
+    const { userInfo, accessToken, error } = useSelector((state) => state.auth);
+
     const dispatch = useDispatch()
-    const {accessToken,error} = auth;
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const loadUserFromCookies = async () => {
-        const authDataSerialized = await AsyncStorage.getItem('accessToken');
-        try {
+    const loadUserFromAsyncStorage = async () => {
         const authDataSerialized = await AsyncStorage.getItem('accessToken');
         const resetAuthDataSerialized = await AsyncStorage.getItem('refreshToken');
-        if (authDataSerialized) {
-           await dispatch(userTokenMe(authDataSerialized))
-        }else{
-            
-        }
-        }catch(error){
-        }
+        const payload = { accessToken: authDataSerialized || null, refreshToken: resetAuthDataSerialized || null }
+        await dispatch(changeToken(payload))
     }
-    useEffect( () => {
-        loadUserFromCookies()
+
+    useEffect(() => {
+        loadUserFromAsyncStorage()
     }, [])
+
+    // useEffect(() => {
+    //     if (accessToken) dispatch(userProfile(accessToken))
+    // }, [accessToken])
+
+
     return (
-        <AuthContext.Provider value={{user}}>
-          {children}
+        <AuthContext.Provider value={{ user: userInfo }}>
+            {children}
         </AuthContext.Provider>
     )
 }
-// const MyContextProvider = ({children}) => {
-//   const [authData, setAuthData] = useState();
-//   //the AuthContext start with loading equals true
-//   //and stay like this, until the data be load from Async Storage
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     loadStorageData();
-//   }, []);
-//   async function loadStorageData() {
-//     try {
-//       //Try get the data from Async Storage
-//       const authDataSerialized = await AsyncStorage.getItem('accessToken');
-//       alert(authDataSerialized)
-//       if (authDataSerialized) {
-//         //If there are data, it's converted to an Object and the state is updated.
-        
-//         const _authData = JSON.parse(authDataSerialized);
-//         setAuthData(_authData);
-//       }
-//     } catch (error) {
-//     } finally {
-//       //loading finished
-//       setLoading(false);
-//     }
-//   }
-//   return (
-//     <MyContext.Provider value={state}>
-//       {children}
-//     </MyContext.Provider>
-//   );
-// };
