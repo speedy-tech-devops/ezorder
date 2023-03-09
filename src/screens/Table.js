@@ -29,8 +29,8 @@ function Table({ navigation }) {
                 <TouchableOpacity key={"to_" + i} onPress={() => {
                   if (item.status == "PROCESSING")
                     navigation.navigate('TableDetail', {
-                      itemId: item.name['th'],
-                      otherParam: item.booking,
+                      tableName: item.name['th'],
+                      bookingId: item.booking,
                     })
                 }}>
                   <View key={"to_" + i} style={{ padding: 8, height: 110, width: 110, alignContent: "center", alignItems: "center", justifyContent: "center", margin: 2, marginBottom: 15 }}>

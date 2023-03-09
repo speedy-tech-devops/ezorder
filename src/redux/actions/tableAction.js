@@ -27,7 +27,7 @@ export const tableList = createAsyncThunk('transaction/table',
     }
 )
 
-export const tableDetail = createAsyncThunk('transaction/table/booking',
+export const tableBooking = createAsyncThunk('transaction/table/booking',
     async (bookingId, { getState, rejectWithValue, dispatch }) => {
         try {
             const state = getState();
@@ -39,6 +39,7 @@ export const tableDetail = createAsyncThunk('transaction/table/booking',
                 },
             }
             const { data } = await axios.get(`${baseUrl}/v1/transaction/table/${bookingId}`, config)
+            console.log(bookingId);
             return data
         } catch (error) {
             // return custom error message from API if any
@@ -47,11 +48,11 @@ export const tableDetail = createAsyncThunk('transaction/table/booking',
                 return rejectWithValue(error.response.data.message)
             }
             return rejectWithValue(error.message)
-
         }
     }
 )
-export const tableBilling = createAsyncThunk('transaction/table/billing',
+
+export const billingList = createAsyncThunk('transaction/table/billing',
     async (billingId, { getState, rejectWithValue, dispatch }) => {
         try {
             const state = getState();

@@ -134,6 +134,7 @@ function Order({ navigation }) {
         </View>
         <Text style={{ fontWeight: "bold", fontSize: 18 }}>ไม่พบรายการ</Text>
         <Text style={{ color: "#949494" }}>ยังไม่มีรายการใหม่เข้ามา</Text>
+       
       </View>
   );
 }

@@ -1,96 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import { View, Alert, Button, Image, StyleSheet, TextInput, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
+import { View, Alert, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import Text from '../components/Text';
 import RadioButton from '../components/RadioButton';
-import { tableBilling, tableDetail, tableList } from '../redux/actions/tableAction';
+import { tableList } from '../redux/actions/tableAction';
 import { useDispatch, useSelector } from 'react-redux'
+import { checkBill } from '../redux/actions/orderAction';
 
-const Stack = createNativeStackNavigator();
 function Checkout({ navigation }) {
-  const { table, auth } = useSelector((state) => state);
+  const { billing } = useSelector((state) => state.table);
+  const { error } = useSelector((state) => state.order);
   const dispatch = useDispatch()
-  const [billing, setBilling] = useState([])
 
-  const PROP = [
+  const props = [
     {
       key: 'เงินสด',
       text: 'เงินสด',
+      selected: true
     },
     {
       key: 'คิวอาร์โค้ด',
       text: 'คิวอาร์โค้ด',
+      selected: false
     },
-    {
-      key: 'บัตรเครดิต',
-      text: 'บัตรเครดิต',
-    }
-  ];
-  const ApporoveOrder = () =>
-    Alert.alert('ยืนยันออเดอร์', 'คุณต้องการส่งออเดอร์นี้ใช่หรือไม่', [
-      {
-        text: 'ยกเลิก',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
-      },
-    ]);
-  const ApporoveServeOrders
-    = () =>
-      Alert.alert('เสิร์ฟออเดอร์', 'คุณเสิร์ฟออเดอร์นี้เรียบร้อยแล้วใช่หรือไม่', [
-        {
-          text: 'ยกเลิก',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
-        },
-      ]);
-  const CancelServeOrders = () =>
-    Alert.alert('ยกเลิกออเดอร์', 'คุณต้องการยกเลิกเมนูนี้ใช่หรือไม่', [
-      {
-        text: 'ยกเลิก',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
-      },
-    ]);
-
-  const TableLoadDetail = async () => {
-    await dispatch(tableBilling(table.tableDetail._id))
-    //   const config = {
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'authorization': `Bearer ${auth.accessToken}`,
-    //         'speedy-branch' : auth.branch
-    //     },
+    // {
+    //   key: 'บัตรเครดิต',
+    //   text: 'บัตรเครดิต',
     // }
+  ];
 
-    // const res = await axios.get(`${baseUrl}/v1/transaction/billing/summary/${table.tableDetail._id}`, config)
-    // setBilling(res.data.data)
-    // await dispatch(tableDetail(otherParam))
-  }
-  useEffect(() => {
-    TableLoadDetail()
-  }, [])
-  useEffect(() => {
-    if (table?.tableBilling) {
-      setBilling(table?.tableBilling)
+  const handleAlertConfirm = () =>
+    Alert.alert('ยืนยันการชำระเงิน', 'คุณต้องการชำระเงินนี้ใช่หรือไม่', [
+      {
+        text: 'ยกเลิก',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'ยืนยัน', onPress: async () => {
+          const data = JSON.stringify({
+            "billing": billing._id,
+            "payment_type": "CASH",
+            "payment_total": parseInt(billing.total_amount)
+          });
+
+          await dispatch(checkBill(data));
+          if (error) return Alert.alert('เกิดข้อผิดพลาดกรุณาลองใหม่อีกครั้ง');
+          dispatch(tableList());
+          Alert.alert('ทำการชำระเงินเรียบร้อย');
+          navigation.navigate('Menu');
+        }
+      },
+    ]);
+
+
+
+  const handleSubmit = () => {
+    if (paymentType == "เงินสด") {
+      handleAlertConfirm()
+    } else {
+      navigation.navigate('Qrcode')
     }
-  }, [table])
+  }
+  const [paymentType, setPaymentType] = useState("เงินสด")
+  const handleSelected = (value) => {
+    setPaymentType(value)
+  }
+
   return (
-    billing.length != 0 ?
+    billing ?
       <>
         <View style={{ flex: 1, textAlign: "left", backgroundColor: "", margin: 0, flexDirection: "row", borderRadius: 10, }}>
           <View style={{ flex: 1 }}>
             <View style={{ flex: 0, justifyContent: "space-between", textAlign: "left", padding: 10, paddingLeft: 15, backgroundColor: "#F7F7F7", flexDirection: "row" }}>
               <Text>หมายเลขบิล: {billing.billing_no}</Text>
-              {/* <Text>หมดเวลา: <Text style={{ color: "red" }}>16:02</Text></Text> */}
             </View>
             <View style={{ flex: 0, justifyContent: "space-between", textAlign: "left", padding: 10, paddingLeft: 15, backgroundColor: "#16284B", flexDirection: "row" }}>
               <Text style={{ color: "#fff" }}>สรุปคำสั่งซื้อ</Text>
@@ -143,7 +125,7 @@ function Checkout({ navigation }) {
               </View> */}
               <View style={{ backgroundColor: "#fff", marginTop: 15, padding: 15 }}>
                 <Text style={{ fontSize: 16, fontWeight: "bold", fontFamily: "Kanit-Bold" }}>เลือกวิธีชำระเงิน</Text>
-                <RadioButton PROP={PROP} />
+                <RadioButton props={props} defaultValue={paymentType} handleSelected={handleSelected} />
               </View>
             </ScrollView>
 
@@ -193,7 +175,7 @@ function Checkout({ navigation }) {
               <Text style={{ fontSize: 16, fontWeight: "bold", fontFamily: "Kanit-Bold", color: "red" }}>฿{billing.total_amount}</Text>
             </View>
             <View style={{ padding: 15, paddingLeft: 20 }}>
-              <TouchableOpacity style={{ width: 194, height: 48, borderColor: "#16284B", borderWidth: 1, alignItems: "center", justifyContent: "center", borderRadius: 10, backgroundColor: "#16284B" }} onPress={() => navigation.navigate('Qrcode')}>
+              <TouchableOpacity style={{ width: 194, height: 48, borderColor: "#16284B", borderWidth: 1, alignItems: "center", justifyContent: "center", borderRadius: 10, backgroundColor: "#16284B" }} onPress={() => handleSubmit()}>
                 <Text style={{ fontSize: 16, fontFamily: "Kanit-Bold", color: "#fff" }}>ดำเนินการต่อ</Text>
               </TouchableOpacity>
             </View>
@@ -210,45 +192,5 @@ function Checkout({ navigation }) {
       </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    marginBottom: 30
-  },
-  inputView: {
-    backgroundColor: "#eee",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "flex-start",
-  },
-  loginBtn: {
-    width: "70%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 0,
-    backgroundColor: "#16284B",
-  },
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 20,
-  },
-  loginText: {
-    color: "#fff"
-  }
-
-});
 
 export default Checkout;

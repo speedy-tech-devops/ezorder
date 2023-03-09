@@ -5,25 +5,31 @@ export default class RadioButton extends Component {
 	state = {
 		value: null,
 	};
+
+	componentDidMount() {
+		const { defaultValue } = this.props;
+		if (defaultValue) {
+			this.setState({ value: defaultValue })
+		}
+	}
 	render() {
-		const { PROP } = this.props;
+		const { props, handleSelected } = this.props;
 		const { value } = this.state;
 		return (
 			<View>
-				{PROP.map(res => {
+				{props.map(item => {
 					return (
-						<TouchableOpacity key={res.key} onPress={() => {
-							this.setState({
-								value: res.key,
-							});
+						<TouchableOpacity key={item.key} onPress={() => {
+							this.setState({ value: item.key })
+							handleSelected(item.key)
 						}}>
 							<View style={styles.container} >
 								<View
 									style={styles.radioCircle}
 								>
-									{value === res.key && <View style={styles.selectedRb} />}
+									{value === item.key && <View style={styles.selectedRb} />}
 								</View>
-								<Text style={styles.radioText}>{res.text}</Text>
+								<Text style={styles.radioText}>{item.text}</Text>
 							</View>
 						</TouchableOpacity>
 

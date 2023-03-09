@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { userLogin, userProfile, userFcmToken } from '../actions/authAction'
+import { userLogin, userProfile, userFcmToken, userLogout } from '../actions/authAction'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const accessToken = null
@@ -7,6 +7,7 @@ const refreshToken = null
 
 const initialState = {
   loading: false,
+  loadingToken: true,
   isLoggedIn: false,
   refreshExpire: false,
   userInfo: {}, // for user object
@@ -23,8 +24,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logout: (state) => {
-      console.log('logout');
+    logout: async (state) => {
+      console.log('test');
       AsyncStorage.clear();
       state.isLoggedIn = false
       state.isLogout = true
@@ -42,11 +43,15 @@ const authSlice = createSlice({
     changeDeviceId: (state, action) => {
       state.deviceId = action.payload.deviceId
     },
+    setLoadingToken: (state) => {
+      state.loadingToken = false
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(userLogin.pending, (state) => {
         state.loading = true
+        state.loadingToken = false
         state.isLoggedIn = false
         state.error = null
         // state.branch = null
@@ -88,8 +93,23 @@ const authSlice = createSlice({
         state.loading = false
         state.error = payload
       })
+      .addCase(userLogout.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(userLogout.fulfilled, (state) => {
+        state.isLoggedIn = false
+        state.isLogout = true
+        state.accessToken = null
+        state.refreshToken = null
+        state.branch = null
+      })
+      .addCase(userLogout.rejected, (state, { payload }) => {
+        state.loading = false
+        state.error = payload
+      })
   },
 })
-export const { logout, changeToken, changeFcmToken, changeDeviceId } = authSlice.actions
+export const { logout, changeToken, changeFcmToken, changeDeviceId, setLoadingToken } = authSlice.actions
 
 export default authSlice.reducer

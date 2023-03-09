@@ -1,16 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useEffect, useState } from "react"
-import { changeToken, logout } from '../src/redux/features/authSlice'
+import { createContext, useEffect } from "react"
+import { changeToken } from '../src/redux/features/authSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
-    const { userInfo, accessToken, error } = useSelector((state) => state.auth);
+    const { userInfo } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch()
     const loadUserFromAsyncStorage = async () => {
-        const authDataSerialized = await AsyncStorage.getItem('accessToken');
-        const resetAuthDataSerialized = await AsyncStorage.getItem('refreshToken');
+
+        const authDataSerialized = await AsyncStorage.getItem('accessToken').catch((err) => console.log(err));
+        const resetAuthDataSerialized = await AsyncStorage.getItem('refreshToken').catch((err) => console.log(err));
         const payload = { accessToken: authDataSerialized || null, refreshToken: resetAuthDataSerialized || null }
         await dispatch(changeToken(payload))
     }

@@ -1,15 +1,16 @@
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import Table from '../../screens/Table'
 import BottomTabNavigator from './BottomTabNavigator';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/features/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogout } from '../../redux/actions/authAction';
 
 function CustomDrawerContent(props) {
   const dispatch = useDispatch();
+  const { deviceId } = useSelector(state => state.auth)
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
-      <DrawerItem label="Logout" onPress={() => dispatch(logout())} />
+      <DrawerItem label="Logout" onPress={() => dispatch(userLogout({ device_id: deviceId }))} />
     </DrawerContentScrollView>
   );
 }

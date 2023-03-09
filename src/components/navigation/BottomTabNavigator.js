@@ -14,7 +14,7 @@ import { userProfile, userFcmToken } from '../../redux/actions/authAction';
 
 const Tab = createBottomTabNavigator()
 function BottomTabNavigator({ navigation }) {
-    const { isLogout, userInfo, accessToken, branch, fcmToken } = useSelector((state) => state.auth);
+    const { isLogout, userInfo, accessToken, branch, fcmToken, deviceId } = useSelector((state) => state.auth);
     const dispatch = useDispatch()
 
     // useEffect(() => {
@@ -26,7 +26,7 @@ function BottomTabNavigator({ navigation }) {
     }, [accessToken])
 
     useEffect(() => {
-        if (branch) dispatch(userFcmToken({ fcm_token: fcmToken, device_id: "" }))
+        if (branch) dispatch(userFcmToken({ fcm_token: fcmToken, device_id: deviceId }))
     }, [branch])
 
 
@@ -50,31 +50,35 @@ function BottomTabNavigator({ navigation }) {
                     </View>
                 </View>
 
-                <Tab.Navigator initialRouteName="Order" screenOptions={{
-                    tabBarActiveTintColor: '#16284B',
-                    tabBarStyle: { fontSize: 12, paddingBottom: 5 }
-                }}>
+                <Tab.Navigator initialRouteName="Order"
+                    screenOptions={({ route }) => ({
+                        tabBarIcon: ({ focused, color, size }) => {
+                            if (route.name === 'ออเดอร์') {
+                                return <Union width={18} height={18} />
+                            } else if (route.name === 'โต๊ะลูกค้า') {
+                                return <Tables width={18} height={18} />
+                            } else {
+                                return <Historys width={18} height={18} />
+                            }
+                        },
+                        tabBarActiveTintColor: '#16284B',
+                        tabBarInactiveTintColor: 'gray',
+                        tabBarStyle: { fontSize: 12, paddingBottom: 5 }
+                    })}>
                     <Tab.Screen name="ออเดอร์" component={Home} options={{
                         headerShown: false,
                         tabBarLabel: () => { return <Text style={{ fontSize: 12 }}>ออเดอร์</Text> },
                         tabBarBadge: "N",
-                        TabBarIcon: ({ focused, color, size }) => (
-                            <Union width={18} height={18} />
-                        ),
+                        
                     }} />
                     <Tab.Screen name="โต๊ะลูกค้า" component={Table} options={{
                         headerShown: false,
                         tabBarLabel: () => { return <Text style={{ fontSize: 12 }}>โต๊ะลูกค้า</Text> },
-                        TabBarIcon: ({ focused, color, size }) => (
-                            <Tables width={18} height={18} />
-                        ),
+                       
                     }} />
                     <Tab.Screen name="ประวัติออเดอร์" component={History} options={{
                         headerShown: false,
                         tabBarLabel: () => { return <Text style={{ fontSize: 12 }}>ประวัติออเดอร์</Text> },
-                        TabBarIcon: ({ focused, color, size }) => (
-                            <Historys width={18} height={18} />
-                        ),
                     }} />
                 </Tab.Navigator>
             </SafeAreaView>

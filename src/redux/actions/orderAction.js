@@ -56,3 +56,31 @@ export const orderAccept = createAsyncThunk('transaction/accept',
         }
     }
 )
+
+export const checkBill = createAsyncThunk('transaction/checkbill',
+    async (event, { getState, rejectWithValue }) => {
+        try {
+            const state = getState();
+            const config = {
+                method: 'post',
+                url: `${baseUrl}/v1/transaction/checkbill`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${state.auth.accessToken}`,
+                    'speedy-branch': state.auth.branch
+                },
+                data: event
+            };
+            const { data } = await axios(config)
+            return data
+        } catch (error) {
+            // return custom error message from API if any
+            if (error.response && error.response.data.message) {
+                if (error.response.status === 401) dispatch(logout())
+                return rejectWithValue(error.response.data.message)
+            }
+            return rejectWithValue(error.message)
+
+        }
+    }
+)

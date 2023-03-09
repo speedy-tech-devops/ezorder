@@ -14,10 +14,12 @@ export const userLogin = createAsyncThunk('auth/login',
             }
 
             const { data } = await axios.post(`${baseUrl}/v1/auth/merchant/login`, { email, password }, config)
-            AsyncStorage.setItem('accessToken', data.token)
-            AsyncStorage.setItem('refreshToken', data.refresh_token)
+
+            await AsyncStorage.setItem('accessToken', data.token)
+            await AsyncStorage.setItem('refreshToken', data.refresh_token)
             return data
         } catch (error) {
+            console.log(error);
             // return custom error message from API if any
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message)
@@ -87,12 +89,39 @@ export const userRefresh = createAsyncThunk('auth/refresh',
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': `Bearer ${state.auth.refreshToken}`
+                    'authorization': `Bearer ${state.auth.refreshToken}`,
+                    'speedy-branch': state.auth.branch,
                 },
             }
             const { data } = await axios.post(`${baseUrl}/v1/auth/merchant/refresh`, {}, config)
-            AsyncStorage.setItem('accessToken', data.token)
-            AsyncStorage.setItem('refreshToken', data.refresh_token)
+            await AsyncStorage.setItem('accessToken', data.token)
+            await AsyncStorage.setItem('refreshToken', data.refresh_token)
+            return data
+        } catch (error) {
+            // return custom error message from API if any
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message)
+            }
+            return rejectWithValue(error.message)
+
+        }
+    }
+)
+
+export const userLogout = createAsyncThunk('auth/logout',
+    async ({ device_id }, { getState, rejectWithValue }) => {
+        try {
+            const state = getState();
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${state.auth.accessToken}`,
+                    'speedy-branch': state.auth.branch
+                },
+            }
+
+            const { data } = await axios.post(`${baseUrl}/v1/auth/merchant/logout`, { device_id }, config)
+            await AsyncStorage.clear()
             return data
         } catch (error) {
             // return custom error message from API if any

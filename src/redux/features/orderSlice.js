@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { orderAccept, orderList } from '../actions/orderAction'
+import { orderAccept, orderList, checkBill } from '../actions/orderAction'
 
 const initialState = {
   loading: false,
@@ -32,11 +32,24 @@ const orderSlice = createSlice({
         state.error = null
         // state.branch = null
       })
-      .addCase(orderAccept.fulfilled, (state, { payload }) => {
+      .addCase(orderAccept.fulfilled, (state) => {
         state.loading = false
         // state.orders = payload
       })
       .addCase(orderAccept.rejected, (state, { payload }) => {
+        state.loading = false
+        state.error = payload
+      })
+      .addCase(checkBill.pending, (state) => {
+        state.loading = true
+        state.error = null
+        // state.branch = null
+      })
+      .addCase(checkBill.fulfilled, (state) => {
+        state.loading = false
+        // state.orders = payload
+      })
+      .addCase(checkBill.rejected, (state, { payload }) => {
         state.loading = false
         state.error = payload
       })

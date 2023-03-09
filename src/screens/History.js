@@ -10,7 +10,6 @@ function History({ navigation }) {
   const [clicked, setClicked] = useState(false);
   const [fakeData, setFakeData] = useState();
   useEffect(() => {
-    
     const getData = async () => {
       let dataFake = fetchDataAll()
       setFakeData(dataFake)

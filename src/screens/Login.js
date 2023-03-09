@@ -1,9 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Alert, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { userLogin } from '../redux/actions/authAction';
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+// import iconv from "iconv-lite";
+// import { Buffer } from "buffer";
+
+// import {
+//   USBPrinter,
+//   NetPrinter,
+//   BLEPrinter,
+// } from "react-native-thermal-receipt-printer";
+
 
 const validationSchema = yup.object({
   email: yup
@@ -51,6 +60,62 @@ function Login({ navigation }) {
     });
 
   const password = useRef(null);
+
+  // console.log(ThermalPrinterEncoder);
+  // const onPress = async () => {
+  //   try {
+
+  //     requestCameraPermission()
+  //     NetPrinter.init().then(() => {
+
+  //     })
+
+  //     // BLEPrinter.init().then(() => {
+  //     //   BLEPrinter.getDeviceList().then(setPrinters);
+  //     // });
+  //     console.log('We will invoke the native module here!');
+  //     // const test = await BLEPrinter.getDeviceList()
+  //     // console.log(test);
+  //     NetPrinter.connectPrinter('192.168.1.103', 9100).then(
+  //       (printer) => console.log(printer),
+  //       error => console.warn(error))
+
+  //     // BLEPrinter.connectPrinter("86:67:7A:83:63:6B").then(
+  //     //   setCurrentPrinter,
+  //     //   error => console.warn(error))
+
+  //   } catch (err) {
+  //     //error handling
+  //     console.log(err.message);
+  //   }
+  // };
+  // printTextTest = async () => {
+  //   // NetPrinter.printText("<C>SPEEDY-TECH</C>\n");
+  //   // iconv.decode(new Buffer(body), "TIS-620");
+  //   NetPrinter.printText("\x1B\x74\x13\xD5 500.00 FIVE HUNDRED EUROS");
+  //   // BLEPrinter.printBill(TCVN3message);
+  //   // BLEPrinter.printBill('<C>sample bill</C>');
+  // }
+
+  // printBillTest = () => {
+
+  // // NetPrinter.printBill("<C>sample bill</C>");
+  // }
+
+  // const requestCameraPermission = async () => {
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+  //     );
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       console.log('You can use the camera');
+  //     } else {
+  //       console.log('Camera permission denied');
+  //     }
+  //   } catch (err) {
+  //     console.warn(err);
+  //   }
+  // };
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', textAlign: "left" }}>
