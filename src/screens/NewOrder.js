@@ -48,7 +48,7 @@ function Order({ navigation }) {
         text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
       },
     ]);
-
+  // console.log(orderorder?.table);
   return (
     orders.length > 0 ?
       <ScrollView style={{ flex: 1 }}>
@@ -59,16 +59,16 @@ function Order({ navigation }) {
                 <View style={{ flex: 1 }}>
                   <View style={styles.shadowProp}>
                     <View style={{ width: 50, height: 50, alignContent: "center", alignItems: "center", backgroundColor: "#006FFF", justifyContent: "center", borderRadius: 5 }}>
-                      <Text style={{ color: "#fff", fontSize: 16, fontFamily: "Kanit-Bold" }}>1</Text>
-                      <Text style={{ color: "#fff", fontFamily: "Kanit-Bold" }}>โต๊ะ</Text>
+                      <Text style={{ color: "#fff", fontSize: 16, fontFamily: "Kanit-Bold",textAlign:"center" }}>{order.table?.name?.th}</Text>
+                      {/* <Text style={{ color: "#fff", fontFamily: "Kanit-Bold" }}>โต๊ะ</Text> */}
                     </View>
                     <View style={{ flex: 1, paddingLeft: 15 }}>
                       <Text style={{ color: "#000", fontWeight: "bold", fontSize: 18, paddingBottom: 5 }}> {order.details.length} รายการ</Text>
                       <View style={{ flexDirection: "row", alignContent: "space-around", alignItems: "flex-end", justifyContent: "space-between" }}>
                         <Text style={{ color: "#000", fontSize: 12, color: "#595959" }}>{order.order_no} </Text>
-                        <TouchableOpacity>
+                        {/* <TouchableOpacity>
                           <Text style={{ color: "#000", fontSize: 12, color: "red" }}>ยกเลิกรายการ </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                       </View>
                     </View>
                     <View style={{ flexDirection: "row", }}>

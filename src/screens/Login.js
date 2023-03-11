@@ -4,16 +4,20 @@ import { userLogin } from '../redux/actions/authAction';
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-// import iconv from "iconv-lite";
-// import { Buffer } from "buffer";
+// import {
+//   NetPrinter,
+//   ColumnAlignment,
+//   COMMANDS,
+// } from 'react-native-thermal-receipt-printer-image-qr';
 
 // import {
-//   USBPrinter,
 //   NetPrinter,
-//   BLEPrinter,
-// } from "react-native-thermal-receipt-printer";
+// } from 'react-native-thermal-receipt-printer';
+// import {Buffer} from 'buffer';
 
-
+// import { Platform } from 'expo-modules-core';
+// import QRCode from 'react-native-qrcode-svg';
+// const EscPosEncoder = require('esc-pos-encoder');
 const validationSchema = yup.object({
   email: yup
     .string('Enter your email')
@@ -60,7 +64,120 @@ function Login({ navigation }) {
     });
 
   const password = useRef(null);
+  let QrRef = useRef(null);
+  const handlePrintBill = async () => {
+    // let address = '2700 S123 Grand Ave, Los Angeles, CA 90007223, USA.';
+    // const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
+    // const BOLD_OFF = COMMANDS.TEXT_FORMAT.TXT_BOLD_OFF;
+    // const CENTER = COMMANDS.TEXT_FORMAT.TXT_ALIGN_CT;
+    // const OFF_CENTER = COMMANDS.TEXT_FORMAT.TXT_ALIGN_LT;
+    try {
+      // await NetPrinter.init().then(() => {
 
+      // })
+
+
+      // console.log(NetPrinter.init());
+      // const status = await NetPrinter.connectPrinter(
+      //   '192.168.1.103',
+      //   9100,
+      // );
+
+      // const encoder = new EscPosEncoder();
+      // let _encoder = encoder
+      //   .initialize()
+      //   .align('center')
+      //   .line('BILLING')
+      //   // .qrcode('https://nielsleenheer.com')
+      //   .encode();
+      // let base64String = Buffer.from(_encoder).toString('base64');
+      // NetPrinter.printRaw(base64String);
+      // const Printer = NetPrinter;
+      // console.log(Printer);
+      // NetPrinter.printText(base64String);
+      // const getDataURL = () => {
+      //   (QrRef).toDataURL(callback);
+      // };
+      // const callback = async (dataURL) => {
+      //   console.log('test');
+      //   let qrProcessed = dataURL.replace(/(\r\n|\n|\r)/gm, '');
+      //   // Can print android and ios with the same type or with encoder for android
+      //   if (Platform.OS === 'android' || Platform.OS === 'ios') {
+
+      //     Printer.printImage(
+      //       `https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`,
+      //       {
+      //         imageWidth: 300,
+      //         imageHeight: 300,
+      //       },
+      //     );
+      //     Printer.printText(`${CENTER}${BOLD_ON} BILLING ${BOLD_OFF}\n`);
+      //     Printer.printText(`${CENTER}${address}${OFF_CENTER}`);
+      //     Printer.printText('090 3399 031 555\n');
+      //     Printer.printText(`Date : 15- 09 - 2021 /15 : 29 : 57 / Admin`);
+      //     Printer.printText(`Product : Total - 4 / No. (1,2,3,4)\n`);
+      //     Printer.printText(
+      //       `${CENTER}${COMMANDS.HORIZONTAL_LINE.HR_80MM}${CENTER}`,
+      //     );
+      //     let orderList = [
+      //       ['1. Skirt Palas Labuh Muslimah Fashion', 'x2', '500$'],
+      //       ['2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION', 'x4222', '500$'],
+      //       [
+      //         '3. Women Crew Neck Button Down Ruffle Collar Loose Blouse',
+      //         'x1',
+      //         '30000000000000$',
+      //       ],
+      //       ['4. Retro Buttons Up Full Sleeve Loose', 'x10', '200$'],
+      //       ['5. Retro Buttons Up', 'x10', '200$'],
+      //     ];
+      //     let columnAlignment = [
+      //       ColumnAlignment.LEFT,
+      //       ColumnAlignment.CENTER,
+      //       ColumnAlignment.RIGHT,
+      //     ];
+      //     let columnWidth = [46 - (7 + 12), 7, 12];
+      //     const header = ['Product list', 'Qty', 'Price'];
+      //     Printer.printColumnsText(header, columnWidth, columnAlignment, [
+      //       `${BOLD_ON}`,
+      //       '',
+      //       '',
+      //     ]);
+      //     Printer.printText(
+      //       `${CENTER}${COMMANDS.HORIZONTAL_LINE.HR3_80MM}${CENTER}`,
+      //     );
+      //     for (let i in orderList) {
+      //       Printer.printColumnsText(
+      //         orderList[i],
+      //         columnWidth,
+      //         columnAlignment,
+      //         [`${BOLD_OFF}`, '', ''],
+      //       );
+      //     }
+      //     Printer.printText(`\n`);
+      //     Printer.printImageBase64(qrProcessed, {
+      //       imageWidth: 50,
+      //       imageHeight: 50,
+      //     });
+      //     Printer.printBill(`${CENTER}Thank you\n`, { beep: false });
+      //   } else {
+      //     // optional for android
+      //     // android
+      //     const encoder = new EscPosEncoder();
+      //     let _encoder = encoder
+      //       .initialize()
+      //       .align('center')
+      //       .line('BILLING')
+      //       .qrcode('https://nielsleenheer.com')
+      //       .encode();
+      //     let base64String = Buffer.from(_encoder).toString('base64');
+      //     Printer.printRaw(base64String);
+      //   }
+      // };
+      // getDataURL();
+    } catch (err) {
+      console.warn(err);
+    }
+  };
   // console.log(ThermalPrinterEncoder);
   // const onPress = async () => {
   //   try {
@@ -168,6 +285,7 @@ function Login({ navigation }) {
       <TouchableOpacity style={styles.loginBtn} onPress={() => handleSubmit()}>
         <Text style={styles.loginText}>เข้าสู่ระบบ</Text>
       </TouchableOpacity>
+      {/* <QRCode value="hey" getRef={(el) => (QrRef = el)} /> */}
     </View>
   );
 }
