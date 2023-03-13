@@ -1,75 +1,61 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { tableBilling, tableDetail, tableList } from '../actions/tableAction'
-
+import { billingList, tableBooking, tableList } from '../actions/tableAction'
 
 const initialState = {
   loading: false,
-  isLoggedIn: false,
-  tableState: null, // for user object
-  tableDetail : null,
+  tableState: null,
+  tableDetail: null,
+  billing: null,
   error: null
 }
 
 const tableSlice = createSlice({
   name: 'table',
   initialState,
-  reducers: {
-    logout: (state) => {
-      localStorage.clear() // deletes token from storage
-      state.isLoggedIn = false
-      state.accessToken = null
-      state.refreshToken = null
-      // state.branch = null
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(tableList.pending, (state) => {
         state.loading = true
-        state.isLoggedIn = false
         state.error = null
         // state.branch = null
       })
       .addCase(tableList.fulfilled, (state, { payload }) => {
         state.loading = false
-        state.isLoggedIn = true
         state.tableState = payload
       })
       .addCase(tableList.rejected, (state, { payload }) => {
         state.loading = false
         state.error = payload
       })
-      .addCase(tableDetail.pending, (state) => {
+      .addCase(tableBooking.pending, (state) => {
         state.loading = true
-        state.isLoggedIn = false
         state.error = null
         // state.branch = null
       })
-      .addCase(tableDetail.fulfilled, (state, { payload }) => {
+      .addCase(tableBooking.fulfilled, (state, { payload }) => {
         state.loading = false
-        state.isLoggedIn = true
         state.tableDetail = payload.data
       })
-      .addCase(tableDetail.rejected, (state, { payload }) => {
+      .addCase(tableBooking.rejected, (state, { payload }) => {
         state.loading = false
         state.error = payload
       })
-      .addCase(tableBilling.pending, (state) => {
+      .addCase(billingList.pending, (state) => {
         state.loading = true
-        state.isLoggedIn = false
         state.error = null
         // state.branch = null
       })
-      .addCase(tableBilling.fulfilled, (state, { payload }) => {
+      .addCase(billingList.fulfilled, (state, { payload }) => {
         state.loading = false
         state.isLoggedIn = true
-        state.tableBilling = payload.data
+        state.billing = payload.data
       })
-      .addCase(tableBilling.rejected, (state, { payload }) => {
+      .addCase(billingList.rejected, (state, { payload }) => {
         state.loading = false
         state.error = payload
       })
-      
+
   },
 })
 export const { logout } = tableSlice.actions

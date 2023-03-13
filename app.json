@@ -17,7 +17,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ezorder.notification",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./google-service/ios/GoogleService-Info.plist",
+      "runtimeVersion": {
+        "policy": "sdkVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +28,14 @@
         "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.ezorder.notification"
+      "package": "com.ezorder.notification",
+      "permissions": [
+        "BLUETOOTH",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_SCAN"
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -46,6 +56,9 @@
           }
         }
       ]
-    ]
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/82468784-87e6-4818-a7fc-48d476f159c8"
+    }
   }
 }

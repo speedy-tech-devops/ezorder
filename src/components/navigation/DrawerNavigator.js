@@ -1,25 +1,31 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from '../../screens/Home'
-import Order from '../../screens/Order'
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import Table from '../../screens/Table'
-import History from '../../screens/History';
-import { useEffect } from 'react';
-import { DrawerActions } from 'react-navigation';
 import BottomTabNavigator from './BottomTabNavigator';
-import { SafeAreaView, View } from 'react-native';
-import TopTabNavigator from './TopTabNavigator';
-const Drawer = createDrawerNavigator();
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogout } from '../../redux/actions/authAction';
 
-function DrawerNavigator({navigation}) {
+function CustomDrawerContent(props) {
+  const dispatch = useDispatch();
+  const { deviceId } = useSelector(state => state.auth)
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem label="Logout" onPress={() => dispatch(userLogout({ device_id: deviceId }))} />
+    </DrawerContentScrollView>
+  );
+}
+
+const Drawer = createDrawerNavigator();
+function DrawerNavigator({ navigation }) {
   return (
     <>
-        <Drawer.Navigator initialRouteName="Home"  >
-            <Drawer.Screen name="Home" component={BottomTabNavigator} options={{
-                headerShown: 
-                false
-            }}/>
-            <Drawer.Screen name="Table" component={Table} />
-        </Drawer.Navigator>
+      <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}  >
+        <Drawer.Screen name="Home" component={BottomTabNavigator} options={{
+          headerShown:
+            false
+        }} />
+        <Drawer.Screen name="Table" component={Table} />
+      </Drawer.Navigator>
     </>
   );
 }
