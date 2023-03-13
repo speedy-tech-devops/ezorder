@@ -91,10 +91,9 @@ function Checkout({ navigation }) {
   },[])
   useEffect(() => {
     if(table?.tableBilling){
-      console.log(table?.tableBilling)
       setBilling(table?.tableBilling)
     }
-  }
+  },[])
   const [paymentType, setPaymentType] = useState("เงินสด")
   const handleSelected = (value) => {
     setPaymentType(value)
