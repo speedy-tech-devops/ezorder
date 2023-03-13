@@ -59,6 +59,40 @@ function Checkout({ navigation }) {
       handleAlertConfirm()
     } else {
       navigation.navigate('Qrcode')
+  ]);
+  const CancelServeOrders = () =>
+    Alert.alert('ยกเลิกออเดอร์', 'คุณต้องการยกเลิกเมนูนี้ใช่หรือไม่', [
+      {
+        text: 'ยกเลิก',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'ยืนยัน', onPress: () => console.log('OK Pressed')
+      },
+  ]);
+  
+  const TableLoadDetail = async () => {
+    await dispatch(tableBilling(table.tableDetail._id))
+  //   const config = {
+  //     headers: {
+  //         'Content-Type': 'application/json',
+  //         'authorization': `Bearer ${auth.accessToken}`,
+  //         'speedy-branch' : auth.branch
+  //     },
+  // }
+  
+  // const res = await axios.get(`${baseUrl}/v1/transaction/billing/summary/${table.tableDetail._id}`, config)
+  // setBilling(res.data.data)
+    // await dispatch(tableDetail(otherParam))
+  }
+  useEffect(() => {
+    TableLoadDetail()
+  },[])
+  useEffect(() => {
+    if(table?.tableBilling){
+      console.log(table?.tableBilling)
+      setBilling(table?.tableBilling)
     }
   }
   const [paymentType, setPaymentType] = useState("เงินสด")
@@ -175,7 +209,18 @@ function Checkout({ navigation }) {
               <Text style={{ fontSize: 16, fontWeight: "bold", fontFamily: "Kanit-Bold", color: "red" }}>฿{billing.total_amount}</Text>
             </View>
             <View style={{ padding: 15, paddingLeft: 20 }}>
-              <TouchableOpacity style={{ width: 194, height: 48, borderColor: "#16284B", borderWidth: 1, alignItems: "center", justifyContent: "center", borderRadius: 10, backgroundColor: "#16284B" }} onPress={() => handleSubmit()}>
+              <TouchableOpacity style={{ width: 194, height: 48, borderColor: "#16284B", borderWidth: 1, alignItems: "center", justifyContent: "center", borderRadius: 10, backgroundColor: "#16284B" }} onPress={() => 
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              ()}>
                 <Text style={{ fontSize: 16, fontFamily: "Kanit-Bold", color: "#fff" }}>ดำเนินการต่อ</Text>
               </TouchableOpacity>
             </View>
