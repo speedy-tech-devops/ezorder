@@ -9,7 +9,7 @@
     "build:android-pre": "eas build --profile preview --platform android",
     "update:android-pre": "eas update --brach preview --message 'updating the app'",
     "build:android-prd": "eas build --profile production --platform android",
-    "update:android-prd": "eas update --brach preview --message 'updating the app'",
+    "update:android-prd": "eas update --brach production --message 'updating the app'",
     "ios": "expo run:ios",
     "web": "expo start --web"
   },
