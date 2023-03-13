@@ -86,6 +86,7 @@ function Checkout({ navigation}) {
   },[])
   useEffect(() => {
     if(table?.tableBilling){
+      console.log(table?.tableBilling)
       setBilling(table?.tableBilling)
     }
   },[table])

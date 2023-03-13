@@ -88,6 +88,7 @@ function TableDetail({ route, navigation}) {
                     {/* ItemList */}
                     {
                       order.details.map((orderdetail,i) => {
+                        console.log(orderdetail)
                         return (
                           <View key={i+orderdetail._id} style={{ flex: 0,textAlign: "left",padding : 15,paddingLeft : 20, backgroundColor : "#fff", borderBottomWidth : 1 , borderBottomColor : "#F0F0F0",flexDirection:'row' }}>
                             <View style={{flex : 1,paddingRight : 15}}>
@@ -96,7 +97,7 @@ function TableDetail({ route, navigation}) {
                                 {orderdetail.note && <Text style={{fontSize : 14,color: "red"}}>{orderdetail.note}</Text>}
                                 
                                 <View  style={{ marginTop : 10}}>
-                                        <View style={{ backgroundColor : (orderdetail.status == "PENDING" && "#FFA800" || orderdetail.status == "PROCESSING" || orderdetail.status == "COMPLETE"  && "#00D42F" || orderdetail.status == "REJECTED" && "#FF0000"),padding : 5, borderRadius : 5 , alignSelf: 'flex-start'}}>
+                                        <View style={{ backgroundColor : (orderdetail.status == "PENDING" && "#FFA800" || (orderdetail.status == "PROCESSING" || orderdetail.status == "COMPLETE")  && "#00D42F" || orderdetail.status == "REJECTED" && "#FF0000"),padding : 5, borderRadius : 5 , alignSelf: 'flex-start'}}>
                                             <Text style={{fontSize : 12, color : "#fff"}}>{orderdetail.status}</Text>
                                         </View>
                                 </View>
